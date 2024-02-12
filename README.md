@@ -30,7 +30,7 @@ It may/will probably add styling options at some point, but this method will alw
 
 # Syntax
 
-ArticleML documents are valid XML.  There are some ArticleML-specific tags.  Everything else is passed through as is so that you can include (X)HTML tags. If you are familiar with HTML, the syntax will take no time at all to pick up.  See the documentation in doc/documentation.html for full details.  The documentation itself is written in ArticleML so doc/documentation.xml is a good place to find examples.  There are also other examples in the `example/` folder.
+ArticleML documents are valid XML.  There are some ArticleML-specific tags.  Everything else is passed through as is so that you can include (X)HTML tags. If you are familiar with HTML, the syntax will take no time at all to pick up.  See the documentation in docs/documentation.html for full details.  The documentation itself is written in ArticleML so docs/documentation.xml is a good place to find examples.  There are also other examples in the `example/` folder.
 
 Here is a brief example of the ArticleML syntax:
 

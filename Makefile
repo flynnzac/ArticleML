@@ -11,8 +11,8 @@ clean:
 install: articleml
 	cp articleml /usr/local/bin/
 
-documentation.html: doc/documentation.xml articleml
-	cat doc/documentation.xml | ./articleml > doc/documentation.html
+documentation.html: docs/documentation.xml articleml
+	cat docs/documentation.xml | ./articleml > docs/documentation.html
 
 test_out.html: example/example.xml
 	cat example/example.xml | ./articleml > example/test_out.html
