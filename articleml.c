@@ -318,7 +318,7 @@ create_open_tag(xmlNodePtr node)
 /* Parsers */
 
 xmlChar*
-parse_section_html(xmlNodePtr section_node, xmlDocPtr doc, article* art)
+copy_section_html(xmlNodePtr section_node, xmlDocPtr doc, article* art)
 {
   xmlChar* output = malloc(sizeof(xmlChar));
   output[0] = '\0';
@@ -336,8 +336,7 @@ parse_section_html(xmlNodePtr section_node, xmlDocPtr doc, article* art)
         {
           output = extend_string(output, cur->content);
         }
-      else if ((!xmlStrcmp(cur->name, (const xmlChar*) "m")) ||
-               (cur->type == XML_CDATA_SECTION_NODE))
+      else 
         {
           /* Things to dump as is */
           char* buffer = NULL;
@@ -348,43 +347,10 @@ parse_section_html(xmlNodePtr section_node, xmlDocPtr doc, article* art)
           fclose(format_stream);
           free(buffer);
         }
-      
-      else
-        {
-          /* Copy attributes for tag. */
-          xmlChar* tag = create_open_tag(cur);
-
-          stringlist head = create_string("<");
-          stringlist* tail = &head;
-
-          tail = append_to_stringlist(tail, tag);
-          tail = append_to_stringlist(tail, ">");
-
-          xmlChar* child_text = NULL;
-          if (cur->children != NULL)
-            {
-              child_text = parse_section_html(cur, doc, art);
-              tail = append_to_stringlist(tail, child_text);
-            }
-
-          tail = append_to_stringlist(tail, "</");
-          tail = append_to_stringlist(tail, cur->name);
-          tail = append_to_stringlist(tail, ">");
-          
-          output = add_stringlist(output, &head);
-
-          if (child_text != NULL)
-            xmlFree(child_text);
-
-          free_stringlist(&head);
-          xmlFree(tag);
-        }
       cur = cur->next;
     }
-
-
+  
   return output;
-
 }
 
 meta
@@ -514,7 +480,7 @@ parse_bibliography(xmlNodePtr bib_node, xmlDocPtr doc)
 /* Deal with references. */
 
 xmlChar*
-replace_all_refs(xmlNodePtr node, xmlDocPtr doc, article* art)
+_parse_section(xmlNodePtr node, xmlDocPtr doc, article* art)
 {
 
   xmlChar* output = malloc(sizeof(xmlChar));
@@ -658,7 +624,7 @@ replace_all_refs(xmlNodePtr node, xmlDocPtr doc, article* art)
               xmlChar* child_text = NULL;
               if (cur->children != NULL)
                 {
-                  child_text = replace_all_refs(cur, doc, art);
+                  child_text = _parse_section(cur, doc, art);
                   tail = append_to_stringlist(tail, child_text);
                 }
 
@@ -683,7 +649,7 @@ replace_all_refs(xmlNodePtr node, xmlDocPtr doc, article* art)
 }
 
 char*
-resolve_refs(xmlChar* html, article* art)
+parse_section(xmlChar* html, article* art)
 {
   char* document = malloc(sizeof(char)*(strlen("<html></html>")+2+xmlStrlen(html)));
   sprintf(document, "<html>%s</html>", (char*) html);
@@ -696,7 +662,7 @@ resolve_refs(xmlChar* html, article* art)
   free(document);
   xmlNodePtr cur = xmlDocGetRootElement(doc);
 
-  return (char*) replace_all_refs(cur, doc, art);
+  return (char*) _parse_section(cur, doc, art);
 }
 
 /* For writing out. */
@@ -858,7 +824,7 @@ create_article(const char* input)
         {
           output.abstract.title = (xmlChar*) alloc_string("Abstract");
           output.abstract.name = (xmlChar*) alloc_string("Abstract");
-          output.abstract.html = parse_section_html(cur, doc, &output);
+          output.abstract.html = copy_section_html(cur, doc, &output);
           
         }
       else if (!xmlStrcmp(cur->name, (const xmlChar*) "section"))
@@ -877,7 +843,7 @@ create_article(const char* input)
               sec.title = alloc_string(sec.name);
             }
 
-          sec.html = parse_section_html(cur, doc, &output);
+          sec.html = copy_section_html(cur, doc, &output);
 
           output.n_sections += 1;
 
@@ -898,11 +864,11 @@ create_article(const char* input)
 
   for (uint64_t i=0; i < output.n_sections; i++)
     {
-      output.sections[i].html = resolve_refs(output.sections[i].html, &output);
+      output.sections[i].html = parse_section(output.sections[i].html, &output);
     }
 
   if (output.abstract.html != NULL)
-    output.abstract.html = resolve_refs(output.abstract.html, &output);
+    output.abstract.html = parse_section(output.abstract.html, &output);
 
   return output;
 
