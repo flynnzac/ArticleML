@@ -1,0 +1,1161 @@
+<article>
+  <meta>
+    <title>ArticleML</title>
+    <author>Zach Flynn</author>
+    <date>today</date>
+  </meta>
+
+  <style>
+    table {
+    border: 0.1em solid black;
+    width:100%;
+    text-align: center;
+    }
+    th,td {
+    border-bottom: 0.1em solid black;
+    }
+  </style>
+
+  <section name="Table of Contents">
+    <ol>
+      <li><ref>Introduction</ref></li>
+      <li><ref>Writing an Article</ref></li>
+      <li><ref>Storing Cites in a Bibliography</ref></li>
+      <li><ref>Writing Math</ref></li>
+      <li><ref>Custom Styling</ref></li>
+      <li><ref>Math Vocabulary</ref></li>
+    </ol>
+  </section>
+
+  <section name="Introduction">
+    <p>
+      <strong>ArticleML</strong> is a markup language for writing... articles.  It lets you weave math, text, and tables together.  It includes a citation management system and an easy way to add references to link around the doc.  
+    </p>
+
+    <p>Project goal:
+    
+    <blockquote>
+      ArticleML wants to make it easy to move research off of printer-focused PDF and to web-focused hypertext.
+    </blockquote>
+    </p>
+
+    <p>
+      The basic principles of the project:
+      <ul>
+        <li>ArticleML is simple and not as flexible as something like LaTex. The goal is to make 90% of what LaTex does 90% easier.  It is okay with making the remaining 10%, 90% harder.</li>
+        <li>While ArticleML is device independent, ArticleML is "web first" in the sense that it is fine with occasionally assuming you mean to publish the article on the internet.</li>
+        <li>ArticleML is an XML dialect (i.e. it is valid XML).</li>
+        <li>ArticleML allows all valid HTML that is valid XML (the XHTML flavor) for formatting.</li>
+      </ul>
+    </p>
+
+    <p>
+      ArticleML is a type of XML. For our purposes, XML is a format that's like HTML except you always have to close the tag or write things like <code><lt/>br/<gt/></code> (a "self-closing" tag).  There are a lot of other features of XML, but we won't need them.
+    </p>
+
+  </section>
+
+  <section name="Writing an Article">
+    <p>
+      This section describes how to write an article in ArticleML.  Most of the article is written the same as you would write any article in HTML, but it has some special features to make the researcher's life easier.
+    </p>
+
+    <p>
+      ArticleML documents start with the <tag>article</tag> tag.  This is the root tag that contains the entire document.  
+    </p>
+
+    <p>
+      The first tag that will usually appear below that is the <tag>meta</tag> tag.  This section defines information about the document.  Currently four tags are possible underneath <tag>meta</tag>.
+    </p>
+
+    <pre><code>
+      <![CDATA[
+               &lt;meta&gt;
+               &lt;title&gt;ArticleML&lt;/title&gt;
+               &lt;author&gt;Zach Flynn&lt;/author&gt;
+               &lt;date&gt;today&lt;/date&gt;
+               &lt;institution&gt;Fill in your institution&lt;/institution&gt;
+               &lt;/meta&gt;]]>
+    </code></pre>
+
+    <p>
+      These tags make it easy for another program to find out who wrote an article, and also determine the heading of the article.
+    </p>
+
+    <p>
+      If your document has an <i>abstract</i>, you can add it here with the <tag>abstract</tag> tag.  You can use any HTML tags you'd like to format text in the abstract.  The abstract is treated the same as any other section of the document exist that it is formatted differently and always put at the top of the document no matter where it is declared in the ArticleML file.
+    </p>
+
+    <pre><code>
+      <![CDATA[
+               &lt;abstract&gt;
+               &lt;p&gt;This article is about &lt;b&gt;important&lt;/b&gt; topics like how to solve &lt;m&gt;a x^[2] + bx + c = 0&lt;/m&gt;.&lt;/p&gt;
+               &lt;/abstract&gt;]]>
+    </code></pre>
+
+    <p>
+      The rest of the article is divided into <tag>section</tag>'s, like this:
+    </p>
+
+    <pre><code>
+      <![CDATA[
+               &lt;section name="Important Section"&gt;
+               &lt;p&gt;Stuff....&lt;/p&gt;
+               &lt;/section&gt;
+      ]]>
+    </code></pre>
+
+    <p>
+      Each section can have a <i>name</i> and a <i>title</i>.  If only the <i>name</i> is specified, then it is used as the <i>title</i>. If neither is present, then nothing will indicate it is a new section in the HTML output.
+    </p>
+
+    <p>
+      If you use the <tag>ref</tag> tag you can create links to various sections so that in a long document, your readers can easily refer back to other sections.  The other advantage of this is that there are direct links to different sections of the article so people discussing your article online can link to the relevant section (the link is the document URL + #section_name).
+    </p>
+
+    <p>
+      For example, the table of contents of this documentation is:
+    </p>
+
+    <pre><code>
+      <![CDATA[
+               &lt;section name="Table of Contents"&gt;
+               &lt;ol&gt;
+               &lt;li&gt;&lt;ref&gt;Introduction&lt;/ref&gt;&lt;/li&gt;
+               &lt;li&gt;&lt;ref&gt;Writing an Article&lt;/ref&gt;&lt;/li&gt;
+               &lt;li&gt;&lt;ref&gt;Storing Cites in a Bibliography&lt;/ref&gt;&lt;/li&gt;
+               &lt;li&gt;&lt;ref&gt;Writing Math&lt;/ref&gt;&lt;/li&gt;
+               &lt;li&gt;&lt;ref&gt;Custom Styling&lt;/ref&gt;&lt;/li&gt;
+               &lt;li&gt;&lt;ref&gt;Math Vocabulary&lt;/ref&gt;&lt;/li&gt;               
+               &lt;/ol&gt;
+               &lt;/section&gt;]]>
+    </code></pre>
+
+
+    <p>Another thing that will come up on occassion is that you want to insert a literal angle bracket (<lt/><gt/>'s).  There are three ways to do it:</p>
+
+    <ol>
+      <li> The <lt/>lt/<gt/> and <lt/>gt<gt/> tags will insert <lt/> or <gt/>, respectively.</li>
+      <li> The <tag>tag</tag> tag will wrap its content in angle brackets, like: "<lt/>tag<gt/>hello<lt/>/tag<gt/> = <tag>hello</tag>.</li>
+      <li> You can insert angle brackets inline using the <tag>m</tag> math environment (discussed more in <ref>Writing Math</ref>) with: <tag>m</tag>lt<lt/>/m<gt/> or <tag>m</tag>gt<lt/>/m<gt/>.</li>
+    </ol>
+    
+    
+  </section>
+
+  <section name="Storing Cites in a Bibliography">
+    <p>
+      ArticleML can maintain bibliographic information in a convenient way and handle inline citations.
+    </p>
+
+    <p>
+      Alongside the article file type described above, ArticleML can process bibliography files.  These files have <tag>bibliography</tag> as their root tag.
+    </p>
+
+    <p>
+      Below the root level tag, there are a number of <tag>entry</tag> tags with <i>name</i> attributes indicating how you want to refer to the citation in the text.
+    </p>
+
+    <p>
+      For an example, see the below bibliography file:
+    </p>
+
+    <pre><code>
+      <![CDATA[
+               &lt;bibliography&gt;
+               &lt;entry name="Flynn2024"&gt;
+               &lt;author&gt;Zach Flynn&lt;/author&gt;
+               &lt;title&gt;My Paper&lt;/title&gt;
+               &lt;publication&gt;A Very Famous Journal&lt;/publication&gt;
+               &lt;volume&gt;38&lt;/volume&gt;
+               &lt;pages&gt;1-23&lt;/pages&gt;
+               &lt;year&gt;2024&lt;/year&gt;
+               &lt;/entry&gt;
+               &lt;/bibliography&gt;]]>
+    </code></pre>
+    <p>
+      Then, within the text, you can reference the bibliography entry using the <tag>cite</tag> tag like this:
+    </p>
+
+    <pre><code>
+      <![CDATA[In this paper, I add to the brilliant work with earth-shattering impact by &lt;cite&gt;Flynn2024&lt;/cite&gt;.]]>
+    </code></pre>
+
+    <p>
+      The <tag>cite</tag> tag inserts an inline citation that looks like this: Zach Flynn (2024) and links to the references section added at the end of the article.  Speaking of which...
+    </p>
+
+    <p>
+      To use a bibliography file in your article, you need to reference it in a <tag>bibliography</tag> block <i>in the article file</i>.  The bibliography entry has a <i>file</i> attribute giving the path to the bibliography file and the content within the tags tell ArticleML how to format the bibiliography entries.
+    </p>
+
+    <p>For example:</p>
+
+    <pre><code>
+      <![CDATA[
+               &lt;bibliography file="bibliography.xml"&gt;
+               &lt;source-author/&gt; (&lt;source-year/&gt;). &lt;u&gt;&lt;source-title/&gt;&lt;/u&gt;. &lt;i&gt;&lt;source-publication/&gt; &lt;source-volume/&gt;&lt;/i&gt;, &lt;source-pages/&gt;.
+               &lt;/bibliography&gt;]]>
+    </code></pre>
+
+    <p>
+      Within the <tag>bibliography</tag> section, tags with the format <lt/>source-ATTRIBUTE<gt/> evaluate to the relevant ATTRIBUTE in the bibliography file.  ArticleML lets you specify any ATTRIBUTE in the bibliography file, i.e. you can have your own schema for bibilography entries. 
+    </p>
+    
+  </section>
+
+  <section name="Writing Math">
+    <p>
+    ArticleML uses a simple language for writing mathematics geared towards being easy to use in an XML document.  Essentially, you write math in roughly the same way as you would write it in an email.  It compiles to MathML, the standard math language for the web.  Because MathML is valid XML, you could just write your math using MathML, but it is not very convenient to write and is difficult to read at a glance. ArticleML's <tag>m</tag> sublanguage looks more like normal mathematics.</p>
+
+    <p>
+      MathML might be useful though if you end up needing to use some advanced formatting, see: <a href="https://developer.mozilla.org/en-US/docs/Web/MathML">Mozilla's resources</a> for more info.
+    </p>
+
+    <p> 
+      To get a sense of what the <tag>m</tag> syntax looks like: <code>@sum[i=1, n] i = @frac[n(n+1), 2]</code> renders to:
+    </p>
+    
+    <m style="display">@sum[i=1,n] i = @frac[n(n+1),2]</m>
+
+    <p>
+      Math is written between <tag>m</tag> tags, like for the above:
+    </p>
+
+    <pre><code>
+      <![CDATA[
+               &lt;m style="display"&gt;
+               @sum[i=1,n] i = @frac[n(n+1), 2]
+               &lt;/m&gt;]]>
+    </code></pre>
+
+
+
+    <p>
+      All of the function-like expressions in <tag>m</tag> start with an @ symbol to differentiate them from other kinds of symbols like the greek characters which do not need any kind of marker.  For example, <code>sigma</code> renders as: <m>sigma</m>.
+    </p>
+
+    <p>
+      To render any string as text even if it contains otherwise meaningful syntax for <tag>m</tag>, use quotation marks, i.e.: <code>"sigma"</code> renders as: <m>"sigma"</m>
+    </p>
+
+    <p>
+      You can do subscripts and superscripts like this (brackets required): x_[i]^[j]. The output is:
+    </p>
+    <m style="display">
+      x_[i]^[j]
+    </m>
+
+    <p>
+      The <i>style</i> attribute can currently be either "display" or "inline".  "display" formats the math centered on the page in a separate paragraph (like above).  "inline" displays the text within the current paragraph.  If you do not specify the <i>style</i> attribute, the "inline" option is assumed like so:
+    </p>
+
+    <pre><code>
+      <![CDATA[The value of &lt;m&gt;theta&lt;/m&gt; is 2.]]>
+    </code></pre>
+
+    <p>
+      Which gets rendered as: The value of <m>theta</m> is 2.
+    </p>
+
+    <p>
+      Use double parenthesis to write matrices in <tag>m</tag>:
+      <pre><code>
+        [[1,2,3],[4,5,6]]
+      </code></pre>
+    </p>
+
+    <p>
+      Which outputs the following:
+    </p>
+    <m style="display">
+      [[1,2,3],[4,5,6]]
+    </m>
+
+    <p>You can change the style of the parenthesis by changing the outer parenthesis (keeping the inner parenthesis as square brackets):
+      <pre><code>
+        ([1,2,3],[4,5,6])
+      </code></pre>
+    </p>
+
+    <p>Which outputs:</p>
+    <m style="display">
+      ([1,2,3],[4,5,6])
+    </m>    
+    
+
+    <p>
+      You can mix math and text in the natural way: <code>@under["max", x] space u(x) quad "st:" quad x ge 0</code>, which renders as:
+    </p>
+    
+    <m style="display">@under["max", x] space u(x) quad "st:" quad x ge 0</m>
+
+    <p>
+      Generally, you should quote long strings in <tag>m</tag>.  Both because it will format better and because substrings would otherwise get picked up as symbols.  For example, <code>quadratic</code> without quotes renders as: <m>quadratic</m> because "quad" is a spacing operator.  Writing <code>"quadratic"</code> gives probably what you want: <m>"quadratic"</m>.
+    </p>
+
+    <p>
+      Lastly, if you want to pass something into the MathML output exactly as written without formatting, use backticks (`) to delineate the text, i.e.: <code>@color[`red`, X]</code>.  If the "red" weren't backticked here, then it would get formatted as an identifier which isn't what the color function is expecting.  See the output below:
+    </p>
+    <m style="display">
+      @color[`red`, X]
+    </m>
+
+    <p>
+      To insert a literal <code>[</code> or <code>]</code> value, use <code>lbracket</code> or <code>rbracket</code>.
+    </p>
+
+
+    <p>
+      And that's really it as far as the grammar and syntax of the math language.  For the full vocabulary of the langauge, see the tables under <ref>Math Vocabulary</ref>.
+    </p>
+  </section>
+
+  
+  <section name="Custom Styling">
+    <p>
+      To use custom CSS for the article, include a <tag>style</tag> tag below <tag>article</tag>.  For example, the entry for the documentation is:
+    </p>
+
+    <pre><code><![CDATA[
+    &lt;style&gt;
+    table {
+    border: 0.1em solid black;
+    width:100%;
+    text-align: center;
+    }
+    th,td {
+    border-bottom: 0.1em solid black;
+    }
+    &lt;/style&gt;
+    ]]></code></pre>
+
+    <p>
+      There are a few classes and ID's you can hook into.  All sections have their "id" set to their "name" attribute and their class is "normal-section".  The abstract has class and id both set to "abstract".  All math is between <tag>math</tag> tags.  Title, author, institution, and date have id's set to "title", "author", "institution", and "date".  Bibliography entries have ID's equal to their name and the bibliography section has class "bibliography".
+    </p>
+
+    <p>
+      And that's all there is to styling.  In the future, ArticleML may add some convenience options for quickly accessing common style changes.
+    </p>
+
+  </section>
+
+  <section name="Math Vocabulary">
+      <div id="vocab" style="width:100%">
+      <div id="colone" style="width:50%;float:left">
+        <table>
+          <tr>
+            <th colspan="2"  style="border-bottom: 0.1em solid black;background:#eee">Symbols</th>
+          </tr>
+          <tr style="border-bottom: 0.1em solid black">
+            <th><tag>m</tag> code</th>
+            <th>Output</th>
+          </tr>
+          <tr>
+            <td>uparrow</td>
+            <td><m>uparrow</m></td>
+          </tr>
+                    <tr>
+            <td>downarrow</td>
+            <td><m>downarrow</m></td>
+                    </tr>
+          <tr>
+            <td>leftarrow</td>
+            <td><m>leftarrow</m></td>
+          </tr>
+          <tr>
+            <td>rightarrow</td>
+            <td><m>rightarrow</m></td>
+          </tr>                    
+          <tr>
+            <td>harrow</td>
+            <td><m>harrow</m></td>
+          </tr>
+
+          <tr>
+            <td>thickrightarrow</td>
+            <td><m>thickrightarrow</m></td>
+          </tr>
+
+          <tr>
+            <td>thickleftarrow</td>
+            <td><m>thickleftarrow</m></td>
+          </tr>
+          <tr>
+            <td>thickharrow</td>
+            <td><m>thickharrow</m></td>
+          </tr>
+          <tr>
+            <td>mapstoarrow</td>
+            <td><m>mapstoarrow</m></td>
+          </tr>
+          <tr>
+            <td>toarrow</td>
+            <td><m>toarrow</m></td>
+          </tr>
+          
+          <tr>
+            <td>tailtwoheadrightarrow</td>
+            <td><m>tailtwoheadrightarrow</m></td>
+          </tr>
+          <tr>
+            <td>tailrightarrow</td>
+            <td><m>tailrightarrow</m></td>
+          </tr>
+          <tr>
+            <td>twoheadrightarrow</td>
+            <td><m>twoheadrightarrow</m></td>
+          </tr>
+          <tr>
+            <td>leftrightarrow</td>
+            <td><m>leftrightarrow</m></td>
+          </tr>
+          <tr>
+            <td>thickleftrightarrow</td>
+            <td><m>thickleftrightarrow</m></td>
+          </tr>
+          <tr>
+            <td>neg</td>
+            <td><m>neg</m></td>
+          </tr>
+          <tr>
+            <td>implies</td>
+            <td><m>implies</m></td>
+          </tr>
+
+          <tr>
+            <td>iff</td>
+            <td><m>iff</m></td>
+          </tr>
+          <tr>
+            <td>forall</td>
+            <td><m>forall</m></td>
+          </tr>
+
+
+          <tr>
+            <td>exists</td>
+            <td><m>exists</m></td>
+          </tr>
+          <tr>
+            <td>bottom</td>
+            <td><m>bottom</m></td>
+          </tr>
+
+          <tr>
+            <td>top</td>
+            <td><m>top</m></td>
+          </tr>
+          <tr>
+            <td>vdash</td>
+            <td><m>vdash</m></td>
+          </tr>
+          <tr>
+            <td>models</td>
+            <td><m>models</m></td>
+          </tr>
+          <tr>
+            <td>int</td>
+            <td><m>int</m></td>
+          </tr>
+          <tr>
+            <td>oint</td>
+            <td><m>oint</m></td>
+          </tr>
+          <tr>
+            <td>partialder</td>
+            <td><m>partialder</m></td>
+          </tr>
+          <tr>
+            <td>nabla</td>
+            <td><m>nabla</m></td>
+          </tr>
+          <tr>
+            <td>pm</td>
+            <td><m>pm</m></td>
+          </tr>
+          <tr>
+            <td>emptyset</td>
+            <td><m>emptyset</m></td>
+          </tr>
+          <tr>
+            <td>infty</td>
+            <td><m>infty</m></td>
+          </tr>
+          
+          <tr>
+            <td>aleph</td>
+            <td><m>aleph</m></td>
+          </tr>
+          <tr>
+            <td>ldots</td>
+            <td><m>ldots</m></td>
+          </tr>
+          <tr>
+            <td>therefore</td>
+            <td><m>therefore</m></td>
+          </tr>
+          <tr>
+            <td>triangle</td>
+            <td><m>triangle</m></td>
+          </tr>
+          <tr>
+            <td>angle</td>
+            <td><m>angle</m></td>
+          </tr>
+          <tr>
+            <td>prime</td>
+            <td><m>prime</m></td>
+          </tr>
+          <tr>
+            <td>space</td>
+            <td>"<m>space</m>"</td>
+          </tr>
+          <tr>
+            <td>frown</td>
+            <td><m>frown</m></td>
+          </tr>
+          <tr>
+            <td>quad</td>
+            <td>"<m>quad</m>"</td>
+          </tr>
+          <tr>
+            <td>qquad</td>
+            <td>"<m>qquad</m>"</td>
+          </tr>
+          <tr>
+            <td>cdots</td>
+            <td><m>cdots</m></td>
+          </tr>
+          <tr>
+            <td>vdots</td>
+            <td><m>vdots</m></td>
+          </tr>
+          <tr>
+            <td>ddots</td>
+            <td><m>ddots</m></td>
+          </tr>
+          <tr>
+            <td>diamond</td>
+            <td><m>diamond</m></td>
+          </tr>
+          <tr>
+            <td>square</td>
+            <td><m>square</m></td>
+          </tr>
+          <tr>
+            <td>lfloor</td>
+            <td><m>lfloor</m></td>
+          </tr>
+          <tr>
+            <td>rfloor</td>
+            <td><m>rfloor</m></td>
+          </tr>
+          <tr>
+            <td>lceiling</td>
+            <td><m>lceiling</m></td>
+          </tr>
+          <tr>
+            <td>rceiling</td>
+            <td><m>rceiling</m></td>
+          </tr>
+          <tr>
+            <td>qed</td>
+            <td><m>qed</m></td>
+          </tr>
+
+          <tr>
+            <td>CC</td>
+            <td><m>CC</m></td>
+          </tr>
+          <tr>
+            <td>NN</td>
+            <td><m>NN</m></td>
+          </tr>
+          <tr>
+            <td>QQ</td>
+            <td><m>QQ</m></td>
+          </tr>
+          <tr>
+            <td>RR</td>
+            <td><m>RR</m></td>
+          </tr>
+          <tr>
+            <td>ZZ</td>
+            <td><m>ZZ</m></td>
+          </tr>
+          <tr>
+            <td>(</td>
+            <td><m>(</m></td>
+          </tr>
+          <tr>
+            <td>)</td>
+            <td><m>)</m></td>
+          </tr>
+          <tr>
+            <td>{</td>
+            <td><m>{</m></td>
+          </tr>
+          <tr>
+            <td>}</td>
+            <td><m>}</m></td>
+          </tr>
+          <tr>
+            <td>lbracket</td>
+            <td><m>lbracket</m></td>
+          </tr>
+          <tr>
+            <td>rbracket</td>
+            <td><m>rbracket</m></td>
+          </tr>          
+        </table>
+        <table>
+          <tr>
+            <th colspan="2"  style="border-bottom: 0.1em solid black;background:#eee">Operators</th>
+          </tr>
+          <tr style="border-bottom: 0.1em solid black">
+            <th><tag>m</tag> code</th>
+            <th>Output</th>
+          </tr>
+          <tr>
+            <td>+</td>
+            <td><m>+</m></td>
+          </tr>
+          <tr>
+            <td>/</td>
+            <td><m>/</m></td>
+          </tr>
+          <tr>
+            <td>!</td>
+            <td><m>!</m></td>
+          </tr>
+          <tr>
+            <td>-</td>
+            <td><m>-</m></td>
+          </tr>
+          <tr>
+            <td>*</td>
+            <td><m>*</m></td>
+          </tr>
+          <tr>
+            <td>cdot</td>
+            <td><m>cdot</m></td>
+          </tr>
+          <tr>
+            <td>bowtie</td>
+            <td><m>bowtie</m></td>
+          </tr>
+          <tr>
+            <td>ltimes</td>
+            <td><m>ltimes</m></td>
+          </tr>
+          <tr>
+            <td>times</td>
+            <td><m>times</m></td>
+          </tr>
+          <tr>
+            <td>circ</td>
+            <td><m>circ</m></td>
+          </tr>
+          <tr>
+            <td>oplus</td>
+            <td><m>oplus</m></td>
+          </tr>
+          <tr>
+            <td>otimes</td>
+            <td><m>otimes</m></td>
+          </tr>
+          <tr>
+            <td>odot</td>
+            <td><m>odot</m></td>
+          </tr>
+          <tr>
+            <td>wedge</td>
+            <td><m>wedge</m></td>
+          </tr>
+          <tr>
+            <td>vee</td>
+            <td><m>vee</m></td>
+          </tr>
+          <tr>
+            <td>cap</td>
+            <td><m>cap</m></td>
+          </tr>
+          <tr>
+            <td>cup</td>
+            <td><m>cup</m></td>
+          </tr>
+          <tr>
+            <td>sum</td>
+            <td><m>sum</m></td>
+          </tr>
+          <tr>
+            <td>prod</td>
+            <td><m>prod</m></td>
+          </tr>
+          <tr>
+            <td>bigwedge</td>
+            <td><m>bigwedge</m></td>
+          </tr>
+          <tr>
+            <td>bigvee</td>
+            <td><m>bigvee</m></td>
+          </tr>
+          <tr>
+            <td>bigcap</td>
+            <td><m>bigcap</m></td>
+          </tr>
+          <tr>
+            <td>bigcup</td>
+            <td><m>bigcup</m></td>
+          </tr>
+
+        </table>
+        <table>
+          <tr>
+            <th colspan="2"  style="border-bottom: 0.1em solid black;background:#eee">Functions</th>
+          </tr>
+          <tr style="border-bottom: 0.1em solid black; background:#eee">
+            <th colspan="2">Unary</th>
+          </tr>
+          <tr style="border-bottom: 0.1em solid black">
+            <th><tag>m</tag> code</th>
+            <th>Output</th>
+          </tr>
+          <tr>
+            <td>@sqrt[X]</td>
+            <td><m>@sqrt[X]</m></td>
+          </tr>
+          <tr>
+            <td>@sum[X]</td>
+            <td><m>@sum[X]</m></td>
+          </tr>
+          <tr>
+            <td>@op[X]</td>
+            <td><m>@op[X]</m></td>
+          </tr>
+          <tr>
+            <td>@text[X]</td>
+            <td><m>@text[X]</m></td>
+          </tr>
+
+          <tr>
+            <td>@hat[X]</td>
+            <td><m>@hat[X]</m></td>
+          </tr>
+
+          <tr>
+            <td>@overline[X]</td>
+            <td><m>@overline[X]</m></td>
+          </tr>
+          <tr>
+            <td>@underline[X]</td>
+            <td><m>@underline[X]</m></td>
+          </tr>
+
+          <tr>
+            <td>@vec[X]</td>
+            <td><m>@vec[X]</m></td>
+          </tr>
+
+          <tr>
+            <td>@dot[X]</td>
+            <td><m>@dot[X]</m></td>
+          </tr>
+          <tr>
+            <td>@ddot[X]</td>
+            <td><m>@ddot[X]</m></td>
+          </tr>
+          <tr>
+            <td>@bb[X]</td>
+            <td><m>@bb[X]</m></td>
+          </tr>
+          <tr>
+            <td>@bbb[X]</td>
+            <td><m>@bbb[X]</m></td>
+          </tr>
+
+          <tr>
+            <td>@cc[X]</td>
+            <td><m>@cc[X]</m></td>
+          </tr>
+
+          <tr>
+            <td>@tt[X]</td>
+            <td><m>@tt[X]</m></td>
+          </tr>
+          <tr>
+            <td>@fr[X]</td>
+            <td><m>@fr[X]</m></td>
+          </tr>
+
+          <tr>
+            <td>@sf[X]</td>
+            <td><m>@sf[X]</m></td>
+          </tr>
+          <tr>
+            <td>@abs[X]</td>
+            <td><m>@abs[X]</m></td>
+          </tr>          
+        </table>
+
+      </div>
+      <div id="coltwo" style="width:50%;overflow:hidden">
+        <table>
+          <tr>
+            <th colspan="2"  style="border-bottom: 0.1em solid black;background:#eee">Greek</th>
+          </tr>
+          <tr style="border-bottom: 0.1em solid black">
+            <th><tag>m</tag> code</th>
+            <th>Output</th>
+          </tr>
+          <tr>
+            <td>alpha</td>
+            <td><m>alpha</m></td>
+          </tr>
+          <tr>
+            <td>beta</td>
+            <td><m>beta</m></td>
+          </tr>
+          <tr>
+            <td>chi</td>
+            <td><m>chi</m></td>
+          </tr>
+          <tr>
+            <td>delta</td>
+            <td><m>delta</m></td>
+          </tr>
+          <tr>
+            <td>Delta</td>
+            <td><m>Delta</m></td>
+          </tr>
+          <tr>
+            <td>epsilon</td>
+            <td><m>epsilon</m></td>
+          </tr>
+          <tr>
+            <td>epsi</td>
+            <td><m>epsi</m></td>
+          </tr>
+          <tr>
+            <td>varepsilon</td>
+            <td><m>varepsilon</m></td>
+          </tr>
+          <tr>
+            <td>eta</td>
+            <td><m>eta</m></td>
+          </tr>
+          <tr>
+            <td>gamma</td>
+            <td><m>gamma</m></td>
+          </tr>
+          <tr>
+            <td>Gamma</td>
+            <td><m>Gamma</m></td>
+          </tr>
+          <tr>
+            <td>iota</td>
+            <td><m>iota</m></td>
+          </tr>
+          <tr>
+            <td>kappa</td>
+            <td><m>kappa</m></td>
+          </tr>
+          <tr>
+            <td>lambda</td>
+            <td><m>lambda</m></td>
+          </tr>
+          <tr>
+            <td>Lambda</td>
+            <td><m>Lambda</m></td>
+          </tr>
+          <tr>
+            <td>mu</td>
+            <td><m>mu</m></td>
+          </tr>
+          <tr>
+            <td>nu</td>
+            <td><m>nu</m></td>
+          </tr>
+          <tr>
+            <td>omega</td>
+            <td><m>omega</m></td>
+          </tr>
+          <tr>
+            <td>Omega</td>
+            <td><m>Omega</m></td>
+          </tr>
+          <tr>
+            <td>phi</td>
+            <td><m>phi</m></td>
+          </tr>
+          <tr>
+            <td>varphi</td>
+            <td><m>varphi</m></td>
+          </tr>
+          <tr>
+            <td>Phi</td>
+            <td><m>Phi</m></td>
+          </tr>
+          <tr>
+            <td>pi</td>
+            <td><m>pi</m></td>
+          </tr>
+          <tr>
+            <td>Pi</td>
+            <td><m>Pi</m></td>
+          </tr>
+          <tr>
+            <td>psi</td>
+            <td><m>psi</m></td>
+          </tr>
+          <tr>
+            <td>Psi</td>
+            <td><m>Psi</m></td>
+          </tr>
+          <tr>
+            <td>rho</td>
+            <td><m>rho</m></td>
+          </tr>
+          <tr>
+            <td>sigma</td>
+            <td><m>sigma</m></td>
+          </tr>
+          <tr>
+            <td>Sigma</td>
+            <td><m>Sigma</m></td>
+          </tr>
+          <tr>
+            <td>tau</td>
+            <td><m>tau</m></td>
+          </tr>
+          <tr>
+            <td>theta</td>
+            <td><m>theta</m></td>
+          </tr>
+
+          <tr>
+            <td>vartheta</td>
+            <td><m>vartheta</m></td>
+          </tr>
+          <tr>
+            <td>Theta</td>
+            <td><m>Theta</m></td>
+          </tr>
+          <tr>
+            <td>upsilon</td>
+            <td><m>upsilon</m></td>
+          </tr>
+          <tr>
+            <td>xi</td>
+            <td><m>xi</m></td>
+          </tr>
+          <tr>
+            <td>Xi</td>
+            <td><m>Xi</m></td>
+          </tr>
+          <tr>
+            <td>zeta</td>
+            <td><m>zeta</m></td>
+          </tr>
+        </table>
+
+        <table>
+          <tr>
+            <th colspan="2"  style="border-bottom: 0.1em solid black;background:#eee">Relations</th>
+          </tr>
+          <tr style="border-bottom: 0.1em solid black">
+            <th><tag>m</tag> code</th>
+            <th>Output</th>
+          </tr>
+
+          <tr>
+            <td>=</td>
+            <td><m>=</m></td>
+          </tr>
+
+          <tr>
+            <td>!=</td>
+            <td><m>!=</m></td>
+          </tr>
+
+          <tr>
+            <td>:=</td>
+            <td><m>:=</m></td>
+          </tr>
+          
+          <tr>
+            <td>preceq</td>
+            <td><m>preceq</m></td>
+          </tr>
+          <tr>
+            <td>prec</td>
+            <td><m>prec</m></td>
+          </tr>
+          <tr>
+            <td>succeq</td>
+            <td><m>succeq</m></td>
+          </tr>
+          <tr>
+            <td>succ</td>
+            <td><m>succ</m></td>
+          </tr>          
+          <tr>
+            <td>le</td>
+            <td><m>le</m></td>
+          </tr>
+          <tr>
+            <td>lt</td>
+            <td><m>lt</m></td>
+          </tr>
+          <tr>
+            <td>ge</td>
+            <td><m>ge</m></td>
+          </tr>          
+          <tr>
+            <td>gt</td>
+            <td><m>gt</m></td>
+          </tr>
+          <tr>
+            <td>rtimes</td>
+            <td><m>rtimes</m></td>
+          </tr>
+          <tr>
+            <td>gt</td>
+            <td><m>gt</m></td>
+          </tr>
+          <tr>
+            <td>in</td>
+            <td><m>in</m></td>
+          </tr>
+          <tr>
+            <td>notin</td>
+            <td><m>notin</m></td>
+          </tr>
+          <tr>
+            <td>subseteq</td>
+            <td><m>subseteq</m></td>
+          </tr>
+          <tr>
+            <td>subset</td>
+            <td><m>subset</m></td>
+          </tr>
+          <tr>
+            <td>supseteq</td>
+            <td><m>supseteq</m></td>
+          </tr>
+          <tr>
+            <td>supset</td>
+            <td><m>supset</m></td>
+          </tr>
+          <tr>
+            <td>equiv</td>
+            <td><m>equiv</m></td>
+          </tr>
+          <tr>
+            <td>cong</td>
+            <td><m>cong</m></td>
+          </tr>
+          <tr>
+            <td>approx</td>
+            <td><m>approx</m></td>
+          </tr>
+          <tr>
+            <td>propto</td>
+            <td><m>propto</m></td>
+          </tr>
+          <tr>
+            <td>nsube</td>
+            <td><m>nsube</m></td>
+          </tr>
+          <tr>
+            <td>nsub</td>
+            <td><m>nsub</m></td>
+          </tr>
+          <tr>
+            <td>nsupe</td>
+            <td><m>nsupe</m></td>
+          </tr>
+          <tr>
+            <td>nsup</td>
+            <td><m>nsup</m></td>
+          </tr>
+          <tr>
+            <td>ni</td>
+            <td><m>ni</m></td>
+          </tr>
+          <tr>
+            <td>nni</td>
+            <td><m>nni</m></td>
+          </tr>
+
+        </table>
+        <table>
+          <tr>
+            <th colspan="2"  style="border-bottom: 0.1em solid black;background:#eee">Functions</th>
+          </tr>
+          <tr style="border-bottom: 0.1em solid black; background:#eee">
+            <th colspan="2">Binary</th>
+          </tr>
+          <tr style="border-bottom: 0.1em solid black">
+            <th><tag>m</tag> code</th>
+            <th>Output</th>
+          </tr>
+          <tr>
+            <td>@frac[X,Y]</td>
+            <td><m>@frac[X,Y]</m></td>
+          </tr>
+          <tr>
+            <td>@sum[X,Y]</td>
+            <td><m>@sum[X,Y]</m></td>
+          </tr>
+          <tr>
+            <td>@root[X,Y]</td>
+            <td><m>@root[X,Y]</m></td>
+          </tr>
+
+          <tr>
+            <td>@color[`red`,Y]</td>
+            <td><m>@color[`red`,Y]</m></td>
+          </tr>
+          <tr>
+            <td>@super[X,Y]</td>
+            <td><m>@super[X,Y]</m></td>
+          </tr>
+          <tr>
+            <td>@sub[X,Y]</td>
+            <td><m>@sub[X,Y]</m></td>
+          </tr>
+          <tr>
+            <td>@over[X,Y]</td>
+            <td><m>@over[X,Y]</m></td>
+          </tr>
+          <tr>
+            <td>@under[X,Y]</td>
+            <td><m>@under[X,Y]</m></td>
+          </tr>          
+        </table>
+        <table>
+          <tr>
+            <th colspan="2"  style="border-bottom: 0.1em solid black;background:#eee">Functions</th>
+          </tr>
+          <tr style="border-bottom: 0.1em solid black; background:#eee">
+            <th colspan="2">Terinary</th>
+          </tr>
+          <tr style="border-bottom: 0.1em solid black">
+            <th><tag>m</tag> code</th>
+            <th>Output</th>
+          </tr>
+          <tr>
+            <td>
+              @underover[X,Y,Z]
+            </td>
+            <td><m>@underover[X,Y,Z]</m></td>
+          </tr>
+        </table>
+
+      </div>
+    </div>
+  </section>
+
+</article>

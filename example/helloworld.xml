@@ -1,0 +1,25 @@
+<article>
+  <meta>
+    <title>Hello World</title>
+    <author>Zach Flynn</author>
+    <date>2024-02-11</date>
+  </meta>
+
+  <section name="Introduction">
+    <p>This is a simple document.</p>
+  </section>
+
+  <section name="Details">
+    <p>As mentioned in the <ref>Introduction</ref>, this is a simple document.</p>
+
+    <p>It has some math though.</p>
+
+    <m style="display">a^[2] + b^[2] = c^[2]</m>
+    <m style="display">a x^[2] + b x + c = 0</m>
+    <m style="display">@sum[i=1,n] i = @frac[n(n+1),2]</m>
+
+    <p>The End <m>qed</m></p>
+
+  </section>
+
+</article>

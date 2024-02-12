@@ -1,0 +1,1142 @@
+<html><head><style>body { width: 70%; margin-left:15%; } #title { font-size: 3em; text-align: center} .math-display { text-align: center; font-size: 1.2em }.math-inline { font-size: 1em }
+    table {
+    border: 0.1em solid black;
+    width:100%;
+    text-align: center;
+    }
+    th,td {
+    border-bottom: 0.1em solid black;
+    }
+  </style></head><body><header><div id="title">ArticleML</div><span id="author">Zach Flynn</span><br/><span id="date">2024-02-12</span><br/></header><section id="Table of Contents" class="normal-section"><h3>Table of Contents</h3>
+    <ol >
+      <li ><a href="#Introduction">Introduction</a></li>
+      <li ><a href="#Writing an Article">Writing an Article</a></li>
+      <li ><a href="#Storing Cites in a Bibliography">Storing Cites in a Bibliography</a></li>
+      <li ><a href="#Writing Math">Writing Math</a></li>
+      <li ><a href="#Custom Styling">Custom Styling</a></li>
+      <li ><a href="#Math Vocabulary">Math Vocabulary</a></li>
+    </ol>
+  </section><section id="Introduction" class="normal-section"><h3>Introduction</h3>
+    <p >
+      <strong >ArticleML</strong> is a markup language for writing... articles.  It lets you weave math, text, and tables together.  It includes a citation management system and an easy way to add references to link around the doc.  
+    </p>
+
+    <p >Project goal:
+    
+    <blockquote >
+      ArticleML wants to make it easy to move research off of printer-focused PDF and to web-focused hypertext.
+    </blockquote>
+    </p>
+
+    <p >
+      The basic principles of the project:
+      <ul >
+        <li >ArticleML is simple and not as flexible as something like LaTex. The goal is to make 90% of what LaTex does 90% easier.  It is okay with making the remaining 10%, 90% harder.</li>
+        <li >While ArticleML is device independent, ArticleML is "web first" in the sense that it is fine with occasionally assuming you mean to publish the article on the internet.</li>
+        <li >ArticleML is an XML dialect (i.e. it is valid XML).</li>
+        <li >ArticleML allows all valid HTML that is valid XML (the XHTML flavor) for formatting.</li>
+      </ul>
+    </p>
+
+    <p >
+      ArticleML is a type of XML. For our purposes, XML is a format that's like HTML except you always have to close the tag or write things like <code >&lt;br/&gt;</code> (a "self-closing" tag).  There are a lot of other features of XML, but we won't need them.
+    </p>
+
+  </section><section id="Writing an Article" class="normal-section"><h3>Writing an Article</h3>
+    <p >
+      This section describes how to write an article in ArticleML.  Most of the article is written the same as you would write any article in HTML, but it has some special features to make the researcher's life easier.
+    </p>
+
+    <p >
+      ArticleML documents start with the &lt;article&gt; tag.  This is the root tag that contains the entire document.  
+    </p>
+
+    <p >
+      The first tag that will usually appear below that is the &lt;meta&gt; tag.  This section defines information about the document.  Currently four tags are possible underneath &lt;meta&gt;.
+    </p>
+
+    <pre ><code >
+      
+               &lt;meta&gt;
+               &lt;title&gt;ArticleML&lt;/title&gt;
+               &lt;author&gt;Zach Flynn&lt;/author&gt;
+               &lt;date&gt;today&lt;/date&gt;
+               &lt;institution&gt;Fill in your institution&lt;/institution&gt;
+               &lt;/meta&gt;
+    
+    </code></pre>
+
+    <p >
+      These tags make it easy for another program to find out who wrote an article, and also determine the heading of the article.
+    </p>
+
+    <p >
+      If your document has an <i >abstract</i>, you can add it here with the &lt;abstract&gt; tag.  You can use any HTML tags you'd like to format text in the abstract.  The abstract is treated the same as any other section of the document exist that it is formatted differently and always put at the top of the document no matter where it is declared in the ArticleML file.
+    </p>
+
+    <pre ><code >
+      
+               &lt;abstract&gt;
+               &lt;p&gt;This article is about &lt;b&gt;important&lt;/b&gt; topics like how to solve &lt;m&gt;a x^[2] + bx + c = 0&lt;/m&gt;.&lt;/p&gt;
+               &lt;/abstract&gt;
+    
+    </code></pre>
+
+    <p >
+      The rest of the article is divided into &lt;section&gt;'s, like this:
+    </p>
+
+    <pre ><code >
+      
+               &lt;section name="Important Section"&gt;
+               &lt;p&gt;Stuff....&lt;/p&gt;
+               &lt;/section&gt;
+      
+    
+    </code></pre>
+
+    <p >
+      Each section can have a <i >name</i> and a <i >title</i>.  If only the <i >name</i> is specified, then it is used as the <i >title</i>. If neither is present, then nothing will indicate it is a new section in the HTML output.
+    </p>
+
+    <p >
+      If you use the &lt;ref&gt; tag you can create links to various sections so that in a long document, your readers can easily refer back to other sections.  The other advantage of this is that there are direct links to different sections of the article so people discussing your article online can link to the relevant section (the link is the document URL + #section_name).
+    </p>
+
+    <p >
+      For example, the table of contents of this documentation is:
+    </p>
+
+    <pre ><code >
+      
+               &lt;section name="Table of Contents"&gt;
+               &lt;ol&gt;
+               &lt;li&gt;&lt;ref&gt;Introduction&lt;/ref&gt;&lt;/li&gt;
+               &lt;li&gt;&lt;ref&gt;Writing an Article&lt;/ref&gt;&lt;/li&gt;
+               &lt;li&gt;&lt;ref&gt;Storing Cites in a Bibliography&lt;/ref&gt;&lt;/li&gt;
+               &lt;li&gt;&lt;ref&gt;Writing Math&lt;/ref&gt;&lt;/li&gt;
+               &lt;li&gt;&lt;ref&gt;Custom Styling&lt;/ref&gt;&lt;/li&gt;
+               &lt;li&gt;&lt;ref&gt;Math Vocabulary&lt;/ref&gt;&lt;/li&gt;               
+               &lt;/ol&gt;
+               &lt;/section&gt;
+    
+    </code></pre>
+
+
+    <p >Another thing that will come up on occassion is that you want to insert a literal angle bracket (&lt;&gt;'s).  There are three ways to do it:</p>
+
+    <ol >
+      <li > The &lt;lt/&gt; and &lt;gt&gt; tags will insert &lt; or &gt;, respectively.</li>
+      <li > The &lt;tag&gt; tag will wrap its content in angle brackets, like: "&lt;tag&gt;hello&lt;/tag&gt; = &lt;hello&gt;.</li>
+      <li > You can insert angle brackets inline using the &lt;m&gt; math environment (discussed more in <a href="#Writing Math">Writing Math</a>) with: &lt;m&gt;lt&lt;/m&gt; or &lt;m&gt;gt&lt;/m&gt;.</li>
+    </ol>
+    
+    
+  </section><section id="Storing Cites in a Bibliography" class="normal-section"><h3>Storing Cites in a Bibliography</h3>
+    <p >
+      ArticleML can maintain bibliographic information in a convenient way and handle inline citations.
+    </p>
+
+    <p >
+      Alongside the article file type described above, ArticleML can process bibliography files.  These files have &lt;bibliography&gt; as their root tag.
+    </p>
+
+    <p >
+      Below the root level tag, there are a number of &lt;entry&gt; tags with <i >name</i> attributes indicating how you want to refer to the citation in the text.
+    </p>
+
+    <p >
+      For an example, see the below bibliography file:
+    </p>
+
+    <pre ><code >
+      
+               &lt;bibliography&gt;
+               &lt;entry name="Flynn2024"&gt;
+               &lt;author&gt;Zach Flynn&lt;/author&gt;
+               &lt;title&gt;My Paper&lt;/title&gt;
+               &lt;publication&gt;A Very Famous Journal&lt;/publication&gt;
+               &lt;volume&gt;38&lt;/volume&gt;
+               &lt;pages&gt;1-23&lt;/pages&gt;
+               &lt;year&gt;2024&lt;/year&gt;
+               &lt;/entry&gt;
+               &lt;/bibliography&gt;
+    
+    </code></pre>
+    <p >
+      Then, within the text, you can reference the bibliography entry using the &lt;cite&gt; tag like this:
+    </p>
+
+    <pre ><code >
+      In this paper, I add to the brilliant work with earth-shattering impact by &lt;cite&gt;Flynn2024&lt;/cite&gt;.
+    
+    </code></pre>
+
+    <p >
+      The &lt;cite&gt; tag inserts an inline citation that looks like this: Zach Flynn (2024) and links to the references section added at the end of the article.  Speaking of which...
+    </p>
+
+    <p >
+      To use a bibliography file in your article, you need to reference it in a &lt;bibliography&gt; block <i >in the article file</i>.  The bibliography entry has a <i >file</i> attribute giving the path to the bibliography file and the content within the tags tell ArticleML how to format the bibiliography entries.
+    </p>
+
+    <p >For example:</p>
+
+    <pre ><code >
+      
+               &lt;bibliography file="bibliography.xml"&gt;
+               &lt;source-author/&gt; (&lt;source-year/&gt;). &lt;u&gt;&lt;source-title/&gt;&lt;/u&gt;. &lt;i&gt;&lt;source-publication/&gt; &lt;source-volume/&gt;&lt;/i&gt;, &lt;source-pages/&gt;.
+               &lt;/bibliography&gt;
+    
+    </code></pre>
+
+    <p >
+      Within the &lt;bibliography&gt; section, tags with the format &lt;source-ATTRIBUTE&gt; evaluate to the relevant ATTRIBUTE in the bibliography file.  ArticleML lets you specify any ATTRIBUTE in the bibliography file, i.e. you can have your own schema for bibilography entries. 
+    </p>
+    
+  </section><section id="Writing Math" class="normal-section"><h3>Writing Math</h3>
+    <p >
+    ArticleML uses a simple language for writing mathematics geared towards being easy to use in an XML document.  Essentially, you write math in roughly the same way as you would write it in an email.  It compiles to MathML, the standard math language for the web.  Because MathML is valid XML, you could just write your math using MathML, but it is not very convenient to write and is difficult to read at a glance. ArticleML's &lt;m&gt; sublanguage looks more like normal mathematics.</p>
+
+    <p >
+      MathML might be useful though if you end up needing to use some advanced formatting, see: <a href="https://developer.mozilla.org/en-US/docs/Web/MathML" >Mozilla's resources</a> for more info.
+    </p>
+
+    <p > 
+      To get a sense of what the &lt;m&gt; syntax looks like: <code >@sum[i=1, n] i = @frac[n(n+1), 2]</code> renders to:
+    </p>
+    
+    <div class="math-display"><math><munderover><mo>Σ</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mrow><mi>n</mi></mrow></munderover><mi>i</mi><mo>=</mo><mfrac><mrow><mi>n</mi><mo>(</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo>)</mo></mrow><mrow><mn>2</mn></mrow></mfrac></math></div>
+
+    <p >
+      Math is written between &lt;m&gt; tags, like for the above:
+    </p>
+
+    <pre ><code >
+      
+               &lt;m style="display"&gt;
+               @sum[i=1,n] i = @frac[n(n+1), 2]
+               &lt;/m&gt;
+    
+    </code></pre>
+
+
+
+    <p >
+      All of the function-like expressions in &lt;m&gt; start with an @ symbol to differentiate them from other kinds of symbols like the greek characters which do not need any kind of marker.  For example, <code >sigma</code> renders as: <span class="math-inline"><math><mi>σ</mi></math></span>.
+    </p>
+
+    <p >
+      To render any string as text even if it contains otherwise meaningful syntax for &lt;m&gt;, use quotation marks, i.e.: <code >"sigma"</code> renders as: <span class="math-inline"><math><mtext>sigma</mtext></math></span>
+    </p>
+
+    <p >
+      You can do subscripts and superscripts like this (brackets required): x_[i]^[j]. The output is:
+    </p>
+    
+<div class="math-display"><math><msubsup><mi>x</mi><mrow><mi>i</mi></mrow><mrow><mi>j</mi></mrow></msubsup></math></div>    
+
+    <p >
+      The <i >style</i> attribute can currently be either "display" or "inline".  "display" formats the math centered on the page in a separate paragraph (like above).  "inline" displays the text within the current paragraph.  If you do not specify the <i >style</i> attribute, the "inline" option is assumed like so:
+    </p>
+
+    <pre ><code >
+      The value of &lt;m&gt;theta&lt;/m&gt; is 2.
+    
+    </code></pre>
+
+    <p >
+      Which gets rendered as: The value of <span class="math-inline"><math><mi>θ</mi></math></span> is 2.
+    </p>
+
+    <p >
+      Use double parenthesis to write matrices in &lt;m&gt;:
+      <pre ><code >
+        [[1,2,3],[4,5,6]]
+      </code></pre>
+    </p>
+
+    <p >
+      Which outputs the following:
+    </p>
+    
+<div class="math-display"><math><mrow><mo>[</mo><mtable><mtr><mtd><mn>1</mn></mtd><mtd><mn>2</mn></mtd><mtd><mn>3</mn></mtd></mtr><mtr><mtd><mn>4</mn></mtd><mtd><mn>5</mn></mtd><mtd><mn>6</mn></mtd></mtr></mtable><mo>]</mo></mrow></math></div>    
+
+    <p >You can change the style of the parenthesis by changing the outer parenthesis (keeping the inner parenthesis as square brackets):
+      <pre ><code >
+        ([1,2,3],[4,5,6])
+      </code></pre>
+    </p>
+
+    <p >Which outputs:</p>
+    
+<div class="math-display"><math><mrow><mo>(</mo><mtable><mtr><mtd><mn>1</mn></mtd><mtd><mn>2</mn></mtd><mtd><mn>3</mn></mtd></mtr><mtr><mtd><mn>4</mn></mtd><mtd><mn>5</mn></mtd><mtd><mn>6</mn></mtd></mtr></mtable><mo>)</mo></mrow></math></div>        
+    
+
+    <p >
+      You can mix math and text in the natural way: <code >@under["max", x] space u(x) quad "st:" quad x ge 0</code>, which renders as:
+    </p>
+    
+    <div class="math-display"><math><munder><mrow><mtext>max</mtext></mrow><mrow><mi>x</mi></mrow></munder><mo>&nbsp;</mo><mi>u</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>&nbsp;&nbsp;</mo><mtext>st:</mtext><mo>&nbsp;&nbsp;</mo><mi>x</mi><mo>≥</mo><mn>0</mn></math></div>
+
+    <p >
+      Generally, you should quote long strings in &lt;m&gt;.  Both because it will format better and because substrings would otherwise get picked up as symbols.  For example, <code >quadratic</code> without quotes renders as: <span class="math-inline"><math><mo>&nbsp;&nbsp;</mo><mi>ratic</mi></math></span> because "quad" is a spacing operator.  Writing <code >"quadratic"</code> gives probably what you want: <span class="math-inline"><math><mtext>quadratic</mtext></math></span>.
+    </p>
+
+    <p >
+      Lastly, if you want to pass something into the MathML output exactly as written without formatting, use backticks (`) to delineate the text, i.e.: <code >@color[`red`, X]</code>.  If the "red" weren't backticked here, then it would get formatted as an identifier which isn't what the color function is expecting.  See the output below:
+    </p>
+    
+<div class="math-display"><math><mstyle mathcolor="red"><mi>X</mi></mstyle></math></div>    
+
+    <p >
+      To insert a literal <code >[</code> or <code >]</code> value, use <code >lbracket</code> or <code >rbracket</code>.
+    </p>
+
+
+    <p >
+      And that's really it as far as the grammar and syntax of the math language.  For the full vocabulary of the langauge, see the tables under <a href="#Math Vocabulary">Math Vocabulary</a>.
+    </p>
+  </section><section id="Custom Styling" class="normal-section"><h3>Custom Styling</h3>
+    <p >
+      To use custom CSS for the article, include a &lt;style&gt; tag below &lt;article&gt;.  For example, the entry for the documentation is:
+    </p>
+
+    <pre ><code >
+    &lt;style&gt;
+    table {
+    border: 0.1em solid black;
+    width:100%;
+    text-align: center;
+    }
+    th,td {
+    border-bottom: 0.1em solid black;
+    }
+    &lt;/style&gt;
+    </code></pre>
+
+    <p >
+      There are a few classes and ID's you can hook into.  All sections have their "id" set to their "name" attribute and their class is "normal-section".  The abstract has class and id both set to "abstract".  All math is between &lt;math&gt; tags.  Title, author, institution, and date have id's set to "title", "author", "institution", and "date".  Bibliography entries have ID's equal to their name and the bibliography section has class "bibliography".
+    </p>
+
+    <p >
+      And that's all there is to styling.  In the future, ArticleML may add some convenience options for quickly accessing common style changes.
+    </p>
+
+  </section><section id="Math Vocabulary" class="normal-section"><h3>Math Vocabulary</h3>
+      <div id="vocab" style="width:100%" >
+      <div id="colone" style="width:50%;float:left" >
+        <table >
+          <tr >
+            <th colspan="2" style="border-bottom: 0.1em solid black;background:#eee" >Symbols</th>
+          </tr>
+          <tr style="border-bottom: 0.1em solid black" >
+            <th >&lt;m&gt; code</th>
+            <th >Output</th>
+          </tr>
+          <tr >
+            <td >uparrow</td>
+            <td ><span class="math-inline"><math><mo>↑</mo></math></span></td>
+          </tr>
+                    <tr >
+            <td >downarrow</td>
+            <td ><span class="math-inline"><math><mo>↓</mo></math></span></td>
+                    </tr>
+          <tr >
+            <td >leftarrow</td>
+            <td ><span class="math-inline"><math><mo>←</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >rightarrow</td>
+            <td ><span class="math-inline"><math><mo>→</mo></math></span></td>
+          </tr>                    
+          <tr >
+            <td >harrow</td>
+            <td ><span class="math-inline"><math><mo>↔</mo></math></span></td>
+          </tr>
+
+          <tr >
+            <td >thickrightarrow</td>
+            <td ><span class="math-inline"><math><mo>⇒</mo></math></span></td>
+          </tr>
+
+          <tr >
+            <td >thickleftarrow</td>
+            <td ><span class="math-inline"><math><mo>⇐</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >thickharrow</td>
+            <td ><span class="math-inline"><math><mo>⇔</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >mapstoarrow</td>
+            <td ><span class="math-inline"><math><mo>↦</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >toarrow</td>
+            <td ><span class="math-inline"><math><mo>→</mo></math></span></td>
+          </tr>
+          
+          <tr >
+            <td >tailtwoheadrightarrow</td>
+            <td ><span class="math-inline"><math><mo>⤖</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >tailrightarrow</td>
+            <td ><span class="math-inline"><math><mo>↣</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >twoheadrightarrow</td>
+            <td ><span class="math-inline"><math><mo>↠</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >leftrightarrow</td>
+            <td ><span class="math-inline"><math><mo>↔</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >thickleftrightarrow</td>
+            <td ><span class="math-inline"><math><mo>⇔</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >neg</td>
+            <td ><span class="math-inline"><math><mo>¬</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >implies</td>
+            <td ><span class="math-inline"><math><mo>⇒</mo></math></span></td>
+          </tr>
+
+          <tr >
+            <td >iff</td>
+            <td ><span class="math-inline"><math><mo>⇔</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >forall</td>
+            <td ><span class="math-inline"><math><mo>∀</mo></math></span></td>
+          </tr>
+
+
+          <tr >
+            <td >exists</td>
+            <td ><span class="math-inline"><math><mo>∃</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >bottom</td>
+            <td ><span class="math-inline"><math><mo>⊥</mo></math></span></td>
+          </tr>
+
+          <tr >
+            <td >top</td>
+            <td ><span class="math-inline"><math><mo>⊤</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >vdash</td>
+            <td ><span class="math-inline"><math><mo>⊢</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >models</td>
+            <td ><span class="math-inline"><math><mo>⊨</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >int</td>
+            <td ><span class="math-inline"><math><mo>∫</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >oint</td>
+            <td ><span class="math-inline"><math><mo>∮</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >partialder</td>
+            <td ><span class="math-inline"><math><mo>∂</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >nabla</td>
+            <td ><span class="math-inline"><math><mo>∇</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >pm</td>
+            <td ><span class="math-inline"><math><mo>±</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >emptyset</td>
+            <td ><span class="math-inline"><math><mo>∅</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >infty</td>
+            <td ><span class="math-inline"><math><mo>∞</mo></math></span></td>
+          </tr>
+          
+          <tr >
+            <td >aleph</td>
+            <td ><span class="math-inline"><math><mo>ℵ</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >ldots</td>
+            <td ><span class="math-inline"><math><mo>…</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >therefore</td>
+            <td ><span class="math-inline"><math><mo>∴</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >triangle</td>
+            <td ><span class="math-inline"><math><mo>△</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >angle</td>
+            <td ><span class="math-inline"><math><mo>∠</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >prime</td>
+            <td ><span class="math-inline"><math><mo>′</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >space</td>
+            <td >"<span class="math-inline"><math><mo>&nbsp;</mo></math></span>"</td>
+          </tr>
+          <tr >
+            <td >frown</td>
+            <td ><span class="math-inline"><math><mo>⌢</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >quad</td>
+            <td >"<span class="math-inline"><math><mo>&nbsp;&nbsp;</mo></math></span>"</td>
+          </tr>
+          <tr >
+            <td >qquad</td>
+            <td >"<span class="math-inline"><math><mo>&nbsp;&nbsp;&nbsp;&nbsp;</mo></math></span>"</td>
+          </tr>
+          <tr >
+            <td >cdots</td>
+            <td ><span class="math-inline"><math><mo>⋯</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >vdots</td>
+            <td ><span class="math-inline"><math><mo>⋮</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >ddots</td>
+            <td ><span class="math-inline"><math><mo>⋱</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >diamond</td>
+            <td ><span class="math-inline"><math><mo>⋄</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >square</td>
+            <td ><span class="math-inline"><math><mo>□</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >lfloor</td>
+            <td ><span class="math-inline"><math><mo>⌊</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >rfloor</td>
+            <td ><span class="math-inline"><math><mo>⌋</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >lceiling</td>
+            <td ><span class="math-inline"><math><mo>⌈</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >rceiling</td>
+            <td ><span class="math-inline"><math><mo>⌉</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >qed</td>
+            <td ><span class="math-inline"><math><mo>∎</mo></math></span></td>
+          </tr>
+
+          <tr >
+            <td >CC</td>
+            <td ><span class="math-inline"><math><mi>ℂ</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >NN</td>
+            <td ><span class="math-inline"><math><mi>ℕ</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >QQ</td>
+            <td ><span class="math-inline"><math><mi>ℚ</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >RR</td>
+            <td ><span class="math-inline"><math><mi>ℝ</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >ZZ</td>
+            <td ><span class="math-inline"><math><mi>ℤ</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >(</td>
+            <td ><span class="math-inline"><math><mo>(</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >)</td>
+            <td ><span class="math-inline"><math><mo>)</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >{</td>
+            <td ><span class="math-inline"><math><mo>{</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >}</td>
+            <td ><span class="math-inline"><math><mo>}</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >lbracket</td>
+            <td ><span class="math-inline"><math><mo>[</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >rbracket</td>
+            <td ><span class="math-inline"><math><mo>]</mo></math></span></td>
+          </tr>          
+        </table>
+        <table >
+          <tr >
+            <th colspan="2" style="border-bottom: 0.1em solid black;background:#eee" >Operators</th>
+          </tr>
+          <tr style="border-bottom: 0.1em solid black" >
+            <th >&lt;m&gt; code</th>
+            <th >Output</th>
+          </tr>
+          <tr >
+            <td >+</td>
+            <td ><span class="math-inline"><math><mo>+</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >/</td>
+            <td ><span class="math-inline"><math><mo>/</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >!</td>
+            <td ><span class="math-inline"><math><mo>!</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >-</td>
+            <td ><span class="math-inline"><math><mo>−</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >*</td>
+            <td ><span class="math-inline"><math><mo>∗</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >cdot</td>
+            <td ><span class="math-inline"><math><mo>⋅</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >bowtie</td>
+            <td ><span class="math-inline"><math><mo>⋈</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >ltimes</td>
+            <td ><span class="math-inline"><math><mo>⋉</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >times</td>
+            <td ><span class="math-inline"><math><mo>×</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >circ</td>
+            <td ><span class="math-inline"><math><mo>∘</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >oplus</td>
+            <td ><span class="math-inline"><math><mo>⊕</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >otimes</td>
+            <td ><span class="math-inline"><math><mo>⊗</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >odot</td>
+            <td ><span class="math-inline"><math><mo>⊙</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >wedge</td>
+            <td ><span class="math-inline"><math><mo>∧</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >vee</td>
+            <td ><span class="math-inline"><math><mo>∨</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >cap</td>
+            <td ><span class="math-inline"><math><mo>∩</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >cup</td>
+            <td ><span class="math-inline"><math><mo>∪</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >sum</td>
+            <td ><span class="math-inline"><math><mo>Σ</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >prod</td>
+            <td ><span class="math-inline"><math><mo>Π</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >bigwedge</td>
+            <td ><span class="math-inline"><math><mo>⋀</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >bigvee</td>
+            <td ><span class="math-inline"><math><mo>⋁</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >bigcap</td>
+            <td ><span class="math-inline"><math><mo>⋂</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >bigcup</td>
+            <td ><span class="math-inline"><math><mo>⋃</mo></math></span></td>
+          </tr>
+
+        </table>
+        <table >
+          <tr >
+            <th colspan="2" style="border-bottom: 0.1em solid black;background:#eee" >Functions</th>
+          </tr>
+          <tr style="border-bottom: 0.1em solid black; background:#eee" >
+            <th colspan="2" >Unary</th>
+          </tr>
+          <tr style="border-bottom: 0.1em solid black" >
+            <th >&lt;m&gt; code</th>
+            <th >Output</th>
+          </tr>
+          <tr >
+            <td >@sqrt[X]</td>
+            <td ><span class="math-inline"><math><msqrt><mi>X</mi></msqrt></math></span></td>
+          </tr>
+          <tr >
+            <td >@sum[X]</td>
+            <td ><span class="math-inline"><math><munder><mo>Σ</mo><mrow><mi>X</mi></mrow></munder></math></span></td>
+          </tr>
+          <tr >
+            <td >@op[X]</td>
+            <td ><span class="math-inline"><math><mo><mi>X</mi></mo></math></span></td>
+          </tr>
+          <tr >
+            <td >@text[X]</td>
+            <td ><span class="math-inline"><math><mtext><mi>X</mi></mtext></math></span></td>
+          </tr>
+
+          <tr >
+            <td >@hat[X]</td>
+            <td ><span class="math-inline"><math><mover><mi>X</mi><mo>^</mo></mover></math></span></td>
+          </tr>
+
+          <tr >
+            <td >@overline[X]</td>
+            <td ><span class="math-inline"><math><mover><mi>X</mi><mo>¯</mo></mover></math></span></td>
+          </tr>
+          <tr >
+            <td >@underline[X]</td>
+            <td ><span class="math-inline"><math><munder><mi>X</mi><mo>_</mo></munder></math></span></td>
+          </tr>
+
+          <tr >
+            <td >@vec[X]</td>
+            <td ><span class="math-inline"><math><mover><mi>X</mi><mo>→</mo></mover></math></span></td>
+          </tr>
+
+          <tr >
+            <td >@dot[X]</td>
+            <td ><span class="math-inline"><math><mover><mi>X</mi><mo>.</mo></mover></math></span></td>
+          </tr>
+          <tr >
+            <td >@ddot[X]</td>
+            <td ><span class="math-inline"><math><mover><mi>X</mi><mo>..</mo></mover></math></span></td>
+          </tr>
+          <tr >
+            <td >@bb[X]</td>
+            <td ><span class="math-inline"><math><mstyle mathvariant="bold"><mi>X</mi></mstyle></math></span></td>
+          </tr>
+          <tr >
+            <td >@bbb[X]</td>
+            <td ><span class="math-inline"><math><mstyle mathvariant="double-struck"><mi>X</mi></mstyle></math></span></td>
+          </tr>
+
+          <tr >
+            <td >@cc[X]</td>
+            <td ><span class="math-inline"><math><mstyle mathvariant="script"><mi>X</mi></mstyle></math></span></td>
+          </tr>
+
+          <tr >
+            <td >@tt[X]</td>
+            <td ><span class="math-inline"><math><mstyle mathvariant="monospace"><mi>X</mi></mstyle></math></span></td>
+          </tr>
+          <tr >
+            <td >@fr[X]</td>
+            <td ><span class="math-inline"><math><mstyle mathvariant="fraktur"><mi>X</mi></mstyle></math></span></td>
+          </tr>
+
+          <tr >
+            <td >@sf[X]</td>
+            <td ><span class="math-inline"><math><mstyle mathvariant="sans-serif"><mi>X</mi></mstyle></math></span></td>
+          </tr>
+          <tr >
+            <td >@abs[X]</td>
+            <td ><span class="math-inline"><math><mo>|</mo><mi>X</mi><mo>|</mo></math></span></td>
+          </tr>          
+        </table>
+
+      </div>
+      <div id="coltwo" style="width:50%;overflow:hidden" >
+        <table >
+          <tr >
+            <th colspan="2" style="border-bottom: 0.1em solid black;background:#eee" >Greek</th>
+          </tr>
+          <tr style="border-bottom: 0.1em solid black" >
+            <th >&lt;m&gt; code</th>
+            <th >Output</th>
+          </tr>
+          <tr >
+            <td >alpha</td>
+            <td ><span class="math-inline"><math><mi>α</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >beta</td>
+            <td ><span class="math-inline"><math><mi>β</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >chi</td>
+            <td ><span class="math-inline"><math><mi>χ</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >delta</td>
+            <td ><span class="math-inline"><math><mi>δ</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >Delta</td>
+            <td ><span class="math-inline"><math><mi>Δ</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >epsilon</td>
+            <td ><span class="math-inline"><math><mi>ε</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >epsi</td>
+            <td ><span class="math-inline"><math><mi>ε</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >varepsilon</td>
+            <td ><span class="math-inline"><math><mi>ε</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >eta</td>
+            <td ><span class="math-inline"><math><mi>η</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >gamma</td>
+            <td ><span class="math-inline"><math><mi>γ</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >Gamma</td>
+            <td ><span class="math-inline"><math><mi>Γ</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >iota</td>
+            <td ><span class="math-inline"><math><mi>ι</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >kappa</td>
+            <td ><span class="math-inline"><math><mi>κ</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >lambda</td>
+            <td ><span class="math-inline"><math><mi>λ</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >Lambda</td>
+            <td ><span class="math-inline"><math><mi>Λ</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >mu</td>
+            <td ><span class="math-inline"><math><mi>μ</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >nu</td>
+            <td ><span class="math-inline"><math><mi>ν</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >omega</td>
+            <td ><span class="math-inline"><math><mi>ω</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >Omega</td>
+            <td ><span class="math-inline"><math><mi>Ω</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >phi</td>
+            <td ><span class="math-inline"><math><mi>φ</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >varphi</td>
+            <td ><span class="math-inline"><math><mi>φ</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >Phi</td>
+            <td ><span class="math-inline"><math><mi>Φ</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >pi</td>
+            <td ><span class="math-inline"><math><mi>π</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >Pi</td>
+            <td ><span class="math-inline"><math><mi>Π</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >psi</td>
+            <td ><span class="math-inline"><math><mi>ψ</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >Psi</td>
+            <td ><span class="math-inline"><math><mi>Ψ</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >rho</td>
+            <td ><span class="math-inline"><math><mi>ρ</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >sigma</td>
+            <td ><span class="math-inline"><math><mi>σ</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >Sigma</td>
+            <td ><span class="math-inline"><math><mi>Σ</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >tau</td>
+            <td ><span class="math-inline"><math><mi>τ</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >theta</td>
+            <td ><span class="math-inline"><math><mi>θ</mi></math></span></td>
+          </tr>
+
+          <tr >
+            <td >vartheta</td>
+            <td ><span class="math-inline"><math><mi>ϑ</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >Theta</td>
+            <td ><span class="math-inline"><math><mi>Θ</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >upsilon</td>
+            <td ><span class="math-inline"><math><mi>υ</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >xi</td>
+            <td ><span class="math-inline"><math><mi>ξ</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >Xi</td>
+            <td ><span class="math-inline"><math><mi>Ξ</mi></math></span></td>
+          </tr>
+          <tr >
+            <td >zeta</td>
+            <td ><span class="math-inline"><math><mi>ζ</mi></math></span></td>
+          </tr>
+        </table>
+
+        <table >
+          <tr >
+            <th colspan="2" style="border-bottom: 0.1em solid black;background:#eee" >Relations</th>
+          </tr>
+          <tr style="border-bottom: 0.1em solid black" >
+            <th >&lt;m&gt; code</th>
+            <th >Output</th>
+          </tr>
+
+          <tr >
+            <td >=</td>
+            <td ><span class="math-inline"><math><mo>=</mo></math></span></td>
+          </tr>
+
+          <tr >
+            <td >!=</td>
+            <td ><span class="math-inline"><math><mo>≠</mo></math></span></td>
+          </tr>
+
+          <tr >
+            <td >:=</td>
+            <td ><span class="math-inline"><math><mo>≔</mo></math></span></td>
+          </tr>
+          
+          <tr >
+            <td >preceq</td>
+            <td ><span class="math-inline"><math><mo>⪯</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >prec</td>
+            <td ><span class="math-inline"><math><mo>≺</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >succeq</td>
+            <td ><span class="math-inline"><math><mo>⪰</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >succ</td>
+            <td ><span class="math-inline"><math><mo>≻</mo></math></span></td>
+          </tr>          
+          <tr >
+            <td >le</td>
+            <td ><span class="math-inline"><math><mo>≤</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >lt</td>
+            <td ><span class="math-inline"><math><mo>&lt;</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >ge</td>
+            <td ><span class="math-inline"><math><mo>≥</mo></math></span></td>
+          </tr>          
+          <tr >
+            <td >gt</td>
+            <td ><span class="math-inline"><math><mo>&gt;</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >rtimes</td>
+            <td ><span class="math-inline"><math><mo>⋊</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >gt</td>
+            <td ><span class="math-inline"><math><mo>&gt;</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >in</td>
+            <td ><span class="math-inline"><math><mo>∈</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >notin</td>
+            <td ><span class="math-inline"><math><mo>∉</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >subseteq</td>
+            <td ><span class="math-inline"><math><mo>⊆</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >subset</td>
+            <td ><span class="math-inline"><math><mo>⊂</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >supseteq</td>
+            <td ><span class="math-inline"><math><mo>⊇</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >supset</td>
+            <td ><span class="math-inline"><math><mo>⊃</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >equiv</td>
+            <td ><span class="math-inline"><math><mo>≡</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >cong</td>
+            <td ><span class="math-inline"><math><mo>≌</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >approx</td>
+            <td ><span class="math-inline"><math><mo>≈</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >propto</td>
+            <td ><span class="math-inline"><math><mo>∝</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >nsube</td>
+            <td ><span class="math-inline"><math><mo>⊈</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >nsub</td>
+            <td ><span class="math-inline"><math><mo>⊄</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >nsupe</td>
+            <td ><span class="math-inline"><math><mo>⊉</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >nsup</td>
+            <td ><span class="math-inline"><math><mo>⊅</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >ni</td>
+            <td ><span class="math-inline"><math><mo>∋</mo></math></span></td>
+          </tr>
+          <tr >
+            <td >nni</td>
+            <td ><span class="math-inline"><math><mo>∌</mo></math></span></td>
+          </tr>
+
+        </table>
+        <table >
+          <tr >
+            <th colspan="2" style="border-bottom: 0.1em solid black;background:#eee" >Functions</th>
+          </tr>
+          <tr style="border-bottom: 0.1em solid black; background:#eee" >
+            <th colspan="2" >Binary</th>
+          </tr>
+          <tr style="border-bottom: 0.1em solid black" >
+            <th >&lt;m&gt; code</th>
+            <th >Output</th>
+          </tr>
+          <tr >
+            <td >@frac[X,Y]</td>
+            <td ><span class="math-inline"><math><mfrac><mrow><mi>X</mi></mrow><mrow><mi>Y</mi></mrow></mfrac></math></span></td>
+          </tr>
+          <tr >
+            <td >@sum[X,Y]</td>
+            <td ><span class="math-inline"><math><munderover><mo>Σ</mo><mrow><mi>X</mi></mrow><mrow><mi>Y</mi></mrow></munderover></math></span></td>
+          </tr>
+          <tr >
+            <td >@root[X,Y]</td>
+            <td ><span class="math-inline"><math><mroot><mi>X</mi><mi>Y</mi></mroot></math></span></td>
+          </tr>
+
+          <tr >
+            <td >@color[`red`,Y]</td>
+            <td ><span class="math-inline"><math><mstyle mathcolor="red"><mi>Y</mi></mstyle></math></span></td>
+          </tr>
+          <tr >
+            <td >@super[X,Y]</td>
+            <td ><span class="math-inline"><math><msup><mi>X</mi><mi>Y</mi></msup></math></span></td>
+          </tr>
+          <tr >
+            <td >@sub[X,Y]</td>
+            <td ><span class="math-inline"><math><msub><mi>X</mi><mi>Y</mi></msub></math></span></td>
+          </tr>
+          <tr >
+            <td >@over[X,Y]</td>
+            <td ><span class="math-inline"><math><mover><mi>X</mi><mi>Y</mi></mover></math></span></td>
+          </tr>
+          <tr >
+            <td >@under[X,Y]</td>
+            <td ><span class="math-inline"><math><munder><mrow><mi>X</mi></mrow><mrow><mi>Y</mi></mrow></munder></math></span></td>
+          </tr>          
+        </table>
+        <table >
+          <tr >
+            <th colspan="2" style="border-bottom: 0.1em solid black;background:#eee" >Functions</th>
+          </tr>
+          <tr style="border-bottom: 0.1em solid black; background:#eee" >
+            <th colspan="2" >Terinary</th>
+          </tr>
+          <tr style="border-bottom: 0.1em solid black" >
+            <th >&lt;m&gt; code</th>
+            <th >Output</th>
+          </tr>
+          <tr >
+            <td >
+              @underover[X,Y,Z]
+            </td>
+            <td ><span class="math-inline"><math><munderover><mo><mi>X</mi></mo><mrow><mi>Y</mi></mrow><mrow><mi>Z</mi></mrow></munderover></math></span></td>
+          </tr>
+        </table>
+
+      </div>
+    </div>
+  </section></body></html>

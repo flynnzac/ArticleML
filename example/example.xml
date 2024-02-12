@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<article>
+  <meta>
+    <title>My Paper</title>
+    <author>Zach Flynn</author>
+    <date>2023-11-01</date>
+  </meta>
+  <bibliography file="example/bibliography.xml">
+    <source-author/> (<source-year/>). <u><source-title/></u>. <i><source-publication/> <source-volume/></i>, <source-pages/>.
+  </bibliography>
+
+  <abstract>
+    <p>This article is about <b>important</b> topics like how to solve <m>ax^(2) + bx + c = 0</m>.</p>
+  </abstract>
+  
+  <section name="intro" title="Introduction">
+    <p style="color:red">
+      In this paper, I add to the brilliant work with earth-shattering impact by <cite>Flynn2024</cite>.
+    </p>
+
+    <p>
+      For example, this paper has a model.
+    </p>
+
+  </section>
+
+  <section name="Model">
+
+    <p>
+      As discussed in <ref>intro</ref>, I have a model of the problem which is slightly better than not having a model of the problem.
+    </p>
+    
+    <p>
+      In fact, <i>my</i> model is very good.  It looks like this.
+    </p>
+    <m style="display">
+      @under["max", p^[top] x le w] u(x)
+    </m>
+
+    <p>
+      Consumers choose <m>x</m> to maximize <m>u</m>.
+    </p>
+  </section>
+</article>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bibliography>
+  <entry name="Flynn2024">
+    <author>Zach Flynn</author>
+    <title>My Paper</title>
+    <publication>A Very Famous Journal</publication>
+    <volume>38</volume>
+    <pages>1-23</pages>
+    <year>2024</year>
+  </entry>
+</bibliography>
