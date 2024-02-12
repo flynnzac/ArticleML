@@ -816,7 +816,7 @@ write_article(FILE* outf, article* art)
   fprintf(outf, "<html>");
 
   fprintf(outf, "<head><style>");
-  fprintf(outf, "body { width: 70%; margin-left:15%; } ");
+  fprintf(outf, "#main-content { width: 70%; margin-left:15%; } ");
   fprintf(outf, "#title { font-size: 3em; text-align: center} ");
   fprintf(outf, ".math-display { text-align: center; font-size: 1.2em }");
   fprintf(outf, ".math-inline { font-size: 1em }");
@@ -826,7 +826,7 @@ write_article(FILE* outf, article* art)
       fprintf(outf, "%s", art->style);
     }
   
-  fprintf(outf, "</style></head><body>");
+  fprintf(outf, "</style></head><body><div id=\"main-content\">");
   fprintf(outf, "<header>");
   
   if (art->metadata.title != NULL)
@@ -881,7 +881,7 @@ write_article(FILE* outf, article* art)
         }
       fprintf(outf, "</section>");
     }
-  fprintf(outf, "</body>");
+  fprintf(outf, "</div></body>");
   fprintf(outf, "</html>");
 }
 

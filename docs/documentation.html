@@ -1,4 +1,4 @@
-<html><head><style>body { width: 70%; margin-left:15%; } #title { font-size: 3em; text-align: center} .math-display { text-align: center; font-size: 1.2em }.math-inline { font-size: 1em }
+<html><head><style>#main-content { width: 70%; margin-left:15%; } #title { font-size: 3em; text-align: center} .math-display { text-align: center; font-size: 1.2em }.math-inline { font-size: 1em }
     table {
     border: 0.1em solid black;
     width:100%;
@@ -7,7 +7,21 @@
     th,td {
     border-bottom: 0.1em solid black;
     }
-  </style></head><body><header><div id="title">ArticleML</div><span id="author">Zach Flynn</span><br/><span id="date">2024-02-13</span><br/></header><section id="Table of Contents" class="normal-section"><h3>Table of Contents</h3>
+    body {
+    background-color: #eee;
+    }
+    #main-content {
+    background-color: white;
+    padding:2em;
+    }
+    .row {
+    display: flex;
+    }
+
+    .column {
+    flex: 50%;
+    }    
+  </style></head><body><div id="main-content"><header><div id="title">ArticleML</div><span id="author">Zach Flynn</span><br/><span id="date">2024-02-13</span><br/></header><section id="Table of Contents" class="normal-section"><h3>Table of Contents</h3>
     <ol >
       <li ><a href="#Introduction">Introduction</a></li>
       <li ><a href="#Writing an Article">Writing an Article</a></li>
@@ -263,9 +277,9 @@
 <div class="math-display"><math><mrow><mo>[</mo><mtable><mtr><mtd><mn>1</mn></mtd><mtd><mn>2</mn></mtd><mtd><mn>3</mn></mtd></mtr><mtr><mtd><mn>4</mn></mtd><mtd><mn>5</mn></mtd><mtd><mn>6</mn></mtd></mtr></mtable><mo>]</mo></mrow></math></div>    
 
     <p >You can change the style of the parenthesis by changing the outer parenthesis (keeping the inner parenthesis as square brackets):
-      <pre ><code >
-        ([1,2,3],[4,5,6])
-      </code></pre>
+    <pre ><code >
+      ([1,2,3],[4,5,6])
+    </code></pre>
     </p>
 
     <p >Which outputs:</p>
@@ -316,7 +330,7 @@
     </code></pre>
 
     <p >
-      There are a few classes and ID's you can hook into.  All sections have their "id" set to their "name" attribute and their class is "normal-section".  The abstract has class and id both set to "abstract".  All math is between &lt;math&gt; tags.  Title, author, institution, and date have id's set to "title", "author", "institution", and "date".  Bibliography entries have ID's equal to their name and the bibliography section has class "bibliography".
+      There are a few classes and ID's you can hook into.  The content of the page is in a div with id = "main-content". All sections have their "id" set to their "name" attribute and their class is "normal-section".  The abstract has class and id both set to "abstract".  All math is between &lt;math&gt; tags.  Title, author, institution, and date have id's set to "title", "author", "institution", and "date".  Bibliography entries have ID's equal to their name and the bibliography section has class "bibliography".
     </p>
 
     <p >
@@ -324,8 +338,8 @@
     </p>
 
   </section><section id="Math Vocabulary" class="normal-section"><h3>Math Vocabulary</h3>
-      <div id="vocab" style="width:100%" >
-      <div id="colone" style="width:50%;float:left" >
+    <div class="row" >
+      <div class="column" >
         <table >
           <tr >
             <th colspan="2" style="border-bottom: 0.1em solid black;background:#eee" >Symbols</th>
@@ -338,10 +352,10 @@
             <td >uparrow</td>
             <td ><span class="math-inline"><math><mo>↑</mo></math></span></td>
           </tr>
-                    <tr >
+          <tr >
             <td >downarrow</td>
             <td ><span class="math-inline"><math><mo>↓</mo></math></span></td>
-                    </tr>
+          </tr>
           <tr >
             <td >leftarrow</td>
             <td ><span class="math-inline"><math><mo>←</mo></math></span></td>
@@ -783,7 +797,7 @@
         </table>
 
       </div>
-      <div id="coltwo" style="width:50%;overflow:hidden" >
+      <div class="column" >
         <table >
           <tr >
             <th colspan="2" style="border-bottom: 0.1em solid black;background:#eee" >Greek</th>
@@ -1136,7 +1150,6 @@
             <td ><span class="math-inline"><math><munderover><mo><mi>X</mi></mo><mrow><mi>Y</mi></mrow><mrow><mi>Z</mi></mrow></munderover></math></span></td>
           </tr>
         </table>
-
       </div>
     </div>
-  </section></body></html>
+  </section></div></body></html>
