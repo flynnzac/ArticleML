@@ -9,7 +9,7 @@ articleml.so: articleml.o
 articleml.o: articleml.c m_leg.c
 	cc -g -fPIC -I/usr/include/libxml2 -c articleml.c -o articleml.o
 
-articleml: articleml.o
+articleml: articleml.o main.c
 	cc -I/usr/include/libxml2 -c main.c -o main.o
 	cc -g -o articleml main.o articleml.o -lxml2
 
