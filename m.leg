@@ -220,7 +220,6 @@ Op	=
 	| "twoheadrightarrow"		{ $$ = tag_element("↠", "mo"); }
 	| "leftrightarrow" 		{ $$ = tag_element("↔", "mo"); }
 	| "thickleftrightarrow" 		{ $$ = tag_element("⇔", "mo"); }
-# Logic
 	| "neg" 	{ $$ = tag_element("¬", "mo"); }
 	| "implies" 	{ $$ = tag_element("⇒", "mo"); }
   | "iff" 	{ $$ = tag_element("⇔", "mo"); }
@@ -230,7 +229,6 @@ Op	=
 	| "top" 	{ $$ = tag_element("⊤", "mo"); }
 	| "vdash"	 { $$ = tag_element("⊢", "mo"); }
 	| "models" 	{ $$ = tag_element("⊨", "mo"); }
-# Misc
 	| "int" 			{ $$ = tag_element("∫", "mo"); }
 	| "oint" 		{ $$ = tag_element("∮", "mo"); }
 	| "partialder" 	{ $$ = tag_element("∂", "mo"); }
@@ -258,7 +256,6 @@ Op	=
 	| "lceiling"	 { $$ = tag_element("⌈", "mo"); }
 	| "rceiling"	 { $$ = tag_element("⌉", "mo"); }
 	| "qed"			{ $$ = tag_element("∎", "mo"); }
-# Rel
 	| "="				{ $$ = tag_element("=", "mo"); }
 	| "!=" 			{ $$ = tag_element("≠", "mo"); }
 	| ":=" 				{ $$ = tag_element("≔", "mo"); }
@@ -286,14 +283,12 @@ Op	=
 	| "nsup" 			{ $$ = tag_element("⊅", "mo"); }
 	| "ni" 				{ $$ = tag_element("∋", "mo"); }
 	| "nni" 				{ $$ = tag_element("∌", "mo"); }
-# Unders
 	| "sum" 		{ $$ = tag_element("Σ", "mo"); }
 	| "prod" 		{ $$ = tag_element("Π", "mo"); }
 	| "bigwedge"	{ $$ = tag_element("⋀", "mo"); }
 	| "bigvee"	{ $$ = tag_element("⋁", "mo"); }
 	| "bigcap"	{ $$ = tag_element("⋂", "mo"); }
 	| "bigcup"	{ $$ = tag_element("⋃", "mo"); }
-# Symbols
 	| "+"			{ $$ = tag_element("+", "mo"); }
 	| "/"			{ $$ = tag_element("/", "mo"); }
 	| "!"			{ $$ = tag_element("!", "mo"); }
@@ -312,7 +307,6 @@ Op	=
 	| "vee"	{ $$ = tag_element("∨", "mo"); }
 	| "cap"	{ $$ = tag_element("∩", "mo"); }
 	| "cup"	{ $$ = tag_element("∪", "mo"); }
-# Lower to not conflict with "ltimes":
 	| "lt" 				{ $$ = tag_element("&lt;", "mo"); } 
   | "(" { $$ = tag_element("(", "mo"); }
   | ")" { $$ = tag_element(")", "mo"); }
