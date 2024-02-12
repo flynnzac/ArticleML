@@ -35,75 +35,9 @@
 
 #define _XOPEN_SOURCE
 #define _GNU_SOURCE
-#define ARTICLEML_BUFFER_SIZE 10000
-#include <stdio.h>
-#include <stdlib.h>
-#include <libxml/xmlreader.h>
-#include <time.h>
-#include <string.h>
-#include <stdbool.h>
+#include "articleml.h"
 #include "m_leg.c"
 
-/* Types */
-
-struct bibentry
-{
-  xmlChar* name;
-  xmlChar** tags;
-  xmlChar** values;
-  uint64_t n_attr;
-};
-
-typedef struct bibentry bibentry;
-
-struct bibliography
-{
-  xmlChar* format;
-  bibentry* entries;
-  uint64_t n_entries;
-};
-
-typedef struct bibliography bibliography;
-
-struct meta
-{
-  xmlChar* title;
-  xmlChar* author;
-  xmlChar* institution;
-  struct tm date;
-};
-
-typedef struct meta meta;
-
-struct section
-{
-  xmlChar* title;
-  xmlChar* name;
-  xmlChar* html;
-};
-
-typedef struct section section;
-
-struct article
-{
-  meta metadata;
-  bibliography bib;
-  bool has_bib;
-  section abstract;
-  section* sections;
-  xmlChar* style;
-  uint64_t n_sections;
-};
-
-typedef struct article article;
-
-struct stringlist
-{
-  const xmlChar* string;
-  struct stringlist* next;
-};
-
-typedef struct stringlist stringlist;
 
 /* Free things. */
 
@@ -201,7 +135,7 @@ find_section(xmlChar* name, article* art)
 /* Basic string utilities */
 
 xmlChar*
-alloc_str(const xmlChar* str)
+alloc_string(const xmlChar* str)
 {
   xmlChar* mem = malloc(sizeof(xmlChar)*(strlen(str)+1));
   strcpy(mem, str);
@@ -331,7 +265,7 @@ create_natural_inline_cite(bibentry* entry)
       author = entry->name;
     }
 
-  xmlChar* cite = alloc_str(author);
+  xmlChar* cite = alloc_string(author);
 
   if (year != NULL)
     {
@@ -357,7 +291,7 @@ xmlChar*
 create_open_tag(xmlNodePtr node)
 {
 
-  xmlChar* name = alloc_str(node->name);
+  xmlChar* name = alloc_string(node->name);
   name = extend_string(name, " ");
   xmlAttr* attr = node->properties;
   while (attr != NULL)
@@ -521,7 +455,7 @@ parse_entry(xmlNodePtr entry_node, xmlDocPtr doc)
           output.n_attr++;
           output.tags = realloc(output.tags, sizeof(xmlChar*)*(output.n_attr));
           output.values = realloc(output.values, sizeof(xmlChar*)*(output.n_attr));
-          output.tags[output.n_attr-1] = alloc_str(cur->name);
+          output.tags[output.n_attr-1] = alloc_string(cur->name);
           output.values[output.n_attr-1] = xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
         }
       cur = cur->next;
@@ -763,7 +697,6 @@ resolve_refs(xmlChar* html, article* art)
   xmlNodePtr cur = xmlDocGetRootElement(doc);
 
   return (char*) replace_all_refs(cur, doc, art);
-                                
 }
 
 /* For writing out. */
@@ -888,7 +821,7 @@ write_article(FILE* outf, article* art)
 /* Build document object */
 
 article
-create_article(char* input)
+create_article(const char* input)
 {
   xmlDocPtr doc;
   xmlNodePtr cur;
@@ -923,8 +856,8 @@ create_article(char* input)
         }
       else if (!xmlStrcmp(cur->name, (const xmlChar*) "abstract"))
         {
-          output.abstract.title = (xmlChar*) alloc_str("Abstract");
-          output.abstract.name = (xmlChar*) alloc_str("Abstract");
+          output.abstract.title = (xmlChar*) alloc_string("Abstract");
+          output.abstract.name = (xmlChar*) alloc_string("Abstract");
           output.abstract.html = parse_section_html(cur, doc, &output);
           
         }
@@ -936,12 +869,12 @@ create_article(char* input)
 
           if (sec.name == NULL)
             {
-              sec.name = alloc_str("");
+              sec.name = alloc_string("");
             }
           
           if (sec.title == NULL)
             {
-              sec.title = alloc_str(sec.name);
+              sec.title = alloc_string(sec.name);
             }
 
           sec.html = parse_section_html(cur, doc, &output);
@@ -975,30 +908,3 @@ create_article(char* input)
 
 }
 
-int
-main (int argc, char** argv)
-{
-  char buffer[ARTICLEML_BUFFER_SIZE];
-  char* input = NULL;
-
-  while(fgets(buffer, sizeof(buffer), stdin)!= NULL)
-    {
-      if (input == NULL)
-        {
-          input = alloc_str(buffer);
-        }
-      else
-        {
-          input = extend_string(input, buffer);
-        }
-    }
-
-  if (input == NULL) return 1;
-  
-  article output = create_article(input);
-  write_article(stdout, &output);
-  free(input);
-  free_article(&output);
-
-  return 0;
-}
