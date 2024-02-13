@@ -71,6 +71,8 @@ free_bibliography(bibliography* bib)
     {
       free_bibentry(&bib->entries[i]);
     }
+
+  free(bib->used_entries);
   free(bib->entries);
 }
 
@@ -118,6 +120,44 @@ find_bibentry(xmlChar* name, bibliography bib)
   return NULL;
   
 }
+
+bool
+is_bibentry_used (bibentry* entry, bibliography* bib)
+{
+  if (bib->used_entries == NULL)
+    {
+      return false;
+    }
+
+  for (uint64_t i=0; i < bib->n_used_entries; i++)
+    {
+      if (entry == bib->used_entries[i])
+        return true;
+    }
+
+  return false;
+}
+
+void
+add_bibentry_used(bibentry* entry, bibliography* bib)
+{
+  if (is_bibentry_used(entry, bib))
+    return;
+
+  if (bib->used_entries == NULL)
+    {
+      bib->used_entries = malloc(sizeof(bibentry*));
+    }
+  else
+    {
+      bib->used_entries = realloc(bib->used_entries, sizeof(bibentry*)*(bib->n_used_entries+1));
+    }
+  
+  bib->used_entries[bib->n_used_entries] = entry;
+  bib->n_used_entries++;
+}
+      
+
 
 section*
 find_section(xmlChar* name, article* art)
@@ -415,6 +455,8 @@ parse_bibliography(xmlNodePtr bib_node, xmlDocPtr doc)
   output.format = NULL;
   output.entries = NULL;
   output.n_entries = 0;
+  output.used_entries = NULL;
+  output.n_used_entries = 0;
   
   xmlChar* bibfile = xmlGetProp(bib_node, "file");
   if (bibfile == NULL)
@@ -482,6 +524,8 @@ _parse_section(xmlNodePtr node, xmlDocPtr doc, article* art)
           xmlChar* content = xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
           bibentry* entry = find_bibentry(content, art->bib);
           xmlFree(content);
+          
+          add_bibentry_used(entry, &art->bib);
 
           xmlChar* text = (xmlChar*) create_natural_inline_cite(entry);
 
@@ -732,7 +776,7 @@ write_article(FILE* outf, article* art)
       fprintf(outf, "</section>");
     }
 
-  if (art->has_bib)
+  if (art->has_bib && (art->bib.n_used_entries > 0))
     {
       fprintf(outf, "<section class=\"bibliography\">");
       fprintf(outf, "<h3>References</h3>");
@@ -742,12 +786,12 @@ write_article(FILE* outf, article* art)
                                     0);
 
       xmlNodePtr cur = xmlDocGetRootElement(bibdoc)->xmlChildrenNode;
-      for (uint64_t i=0; i < art->bib.n_entries; i++)
+      for (uint64_t i=0; i < art->bib.n_used_entries; i++)
         {
           fprintf(outf, "<div id=\"");
-          fprintf(outf, "%s", art->bib.entries[i].name);
+          fprintf(outf, "%s", art->bib.used_entries[i]->name);
           fprintf(outf, "\">");
-          write_bibliography(outf, cur, bibdoc, &art->bib.entries[i]);
+          write_bibliography(outf, cur, bibdoc, art->bib.used_entries[i]);
           fprintf(outf, "</div>");
         }
       fprintf(outf, "</section>");

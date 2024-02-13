@@ -60,6 +60,8 @@ struct bibliography
   xmlChar* format;
   bibentry* entries;
   uint64_t n_entries;
+  bibentry** used_entries;
+  uint64_t n_used_entries;
 };
 
 typedef struct bibliography bibliography;
