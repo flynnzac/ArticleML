@@ -69,8 +69,7 @@
       The first tag that will usually appear below that is the &lt;meta&gt; tag.  This section defines information about the document.  Currently four tags are possible underneath &lt;meta&gt;.
     </p>
 
-    <pre >
-  <code >
+    <pre ><code >
       
                &lt;meta&gt;
                &lt;title&gt;ArticleML&lt;/title&gt;
@@ -79,8 +78,7 @@
                &lt;institution&gt;Fill in your institution&lt;/institution&gt;
                &lt;/meta&gt;
     
-    </code>
-</pre>
+    </code></pre>
 
     <p >
       These tags make it easy for another program to find out who wrote an article, and also determine the heading of the article.
@@ -90,30 +88,26 @@
       If your document has an <i >abstract</i>, you can add it here with the &lt;abstract&gt; tag.  You can use any HTML tags you'd like to format text in the abstract.  The abstract is treated the same as any other section of the document exist that it is formatted differently and always put at the top of the document no matter where it is declared in the ArticleML file.
     </p>
 
-    <pre >
-  <code >
+    <pre ><code >
       
                &lt;abstract&gt;
                &lt;p&gt;This article is about &lt;b&gt;important&lt;/b&gt; topics like how to solve &lt;m&gt;a x^[2] + bx + c = 0&lt;/m&gt;.&lt;/p&gt;
                &lt;/abstract&gt;
     
-    </code>
-</pre>
+    </code></pre>
 
     <p >
       The rest of the article is divided into &lt;section&gt;'s, like this:
     </p>
 
-    <pre >
-  <code >
+    <pre ><code >
       
                &lt;section name="Important Section"&gt;
                &lt;p&gt;Stuff....&lt;/p&gt;
                &lt;/section&gt;
       
     
-    </code>
-</pre>
+    </code></pre>
 
     <p >
       Each section can have a <i >name</i> and a <i >title</i>.  If only the <i >name</i> is specified, then it is used as the <i >title</i>. If neither is present, then nothing will indicate it is a new section in the HTML output.
@@ -127,8 +121,7 @@
       For example, the table of contents of this documentation is:
     </p>
 
-    <pre >
-  <code >
+    <pre ><code >
       
                &lt;section name="Table of Contents"&gt;
                &lt;ol&gt;
@@ -141,8 +134,7 @@
                &lt;/ol&gt;
                &lt;/section&gt;
     
-    </code>
-</pre>
+    </code></pre>
 
 
     <p >Another thing that will come up on occassion is that you want to insert a literal angle bracket (&lt;&gt;'s).  There are three ways to do it:</p>
@@ -171,8 +163,7 @@
       For an example, see the below bibliography file:
     </p>
 
-    <pre >
-  <code >
+    <pre ><code >
       
                &lt;bibliography&gt;
                &lt;entry name="Flynn2024"&gt;
@@ -185,18 +176,15 @@
                &lt;/entry&gt;
                &lt;/bibliography&gt;
     
-    </code>
-</pre>
+    </code></pre>
     <p >
       Then, within the text, you can reference the bibliography entry using the &lt;cite&gt; tag like this:
     </p>
 
-    <pre >
-  <code >
+    <pre ><code >
       In this paper, I add to the brilliant work with earth-shattering impact by &lt;cite&gt;Flynn2024&lt;/cite&gt;.
     
-    </code>
-</pre>
+    </code></pre>
 
     <p >
       The &lt;cite&gt; tag inserts an inline citation that looks like this: Zach Flynn (2024) and links to the references section added at the end of the article.  Speaking of which...
@@ -208,15 +196,13 @@
 
     <p >For example:</p>
 
-    <pre >
-  <code >
+    <pre ><code >
       
                &lt;bibliography file="bibliography.xml"&gt;
                &lt;source-author/&gt; (&lt;source-year/&gt;). &lt;u&gt;&lt;source-title/&gt;&lt;/u&gt;. &lt;i&gt;&lt;source-publication/&gt; &lt;source-volume/&gt;&lt;/i&gt;, &lt;source-pages/&gt;.
                &lt;/bibliography&gt;
     
-    </code>
-</pre>
+    </code></pre>
 
     <p >
       Within the &lt;bibliography&gt; section, tags with the format &lt;source-ATTRIBUTE&gt; evaluate to the relevant ATTRIBUTE in the bibliography file.  ArticleML lets you specify any ATTRIBUTE in the bibliography file, i.e. you can have your own schema for bibilography entries. 
@@ -240,15 +226,13 @@
       Math is written between &lt;m&gt; tags, like for the above:
     </p>
 
-    <pre >
-  <code >
+    <pre ><code >
       
                &lt;m style="display"&gt;
                @sum[i=1,n] i = @frac[n(n+1), 2]
                &lt;/m&gt;
     
-    </code>
-</pre>
+    </code></pre>
 
 
 
@@ -270,12 +254,10 @@
       The <i >style</i> attribute can currently be either "display" or "inline".  "display" formats the math centered on the page in a separate paragraph (like above).  "inline" displays the text within the current paragraph.  If you do not specify the <i >style</i> attribute, the "inline" option is assumed like so:
     </p>
 
-    <pre >
-  <code >
+    <pre ><code >
       The value of &lt;m&gt;theta&lt;/m&gt; is 2.
     
-    </code>
-</pre>
+    </code></pre>
 
     <p >
       Which gets rendered as: The value of <span class="math-inline"><math><mi>θ</mi></math></span> is 2.
@@ -334,8 +316,7 @@
       To use custom CSS for the article, include a &lt;style&gt; tag below &lt;article&gt;.  For example, the entry for the documentation is:
     </p>
 
-    <pre >
-  <code >
+    <pre ><code >
     &lt;style&gt;
     table {
     border: 0.1em solid black;
@@ -346,8 +327,7 @@
     border-bottom: 0.1em solid black;
     }
     &lt;/style&gt;
-    </code>
-</pre>
+    </code></pre>
 
     <p >
       There are a few classes and ID's you can hook into.  The content of the page is in a div with id = "main-content". All sections have their "id" set to their "name" attribute and their class is "normal-section".  The abstract has class and id both set to "abstract".  All math is between &lt;math&gt; tags.  Title, author, institution, and date have id's set to "title", "author", "institution", and "date".  Bibliography entries have ID's equal to their name and the bibliography section has class "bibliography".

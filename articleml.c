@@ -320,37 +320,13 @@ create_open_tag(xmlNodePtr node)
 xmlChar*
 copy_section_html(xmlNodePtr section_node, xmlDocPtr doc, article* art)
 {
-  xmlChar* output = malloc(sizeof(xmlChar));
-  output[0] = '\0';
-
-  xmlNodePtr cur = section_node->xmlChildrenNode;
-
-  if (cur == NULL)
-    {
-      cur = section_node;
-    }
-
-  while (cur != NULL)
-    {
-      if (!xmlStrcmp(cur->name, (const xmlChar*) "text"))
-        {
-          output = extend_string(output, cur->content);
-        }
-      else 
-        {
-          /* Things to dump as is */
-          char* buffer = NULL;
-          size_t sz = 0;
-          FILE* format_stream  = open_memstream(&buffer, &sz);
-          xmlElemDump(format_stream, doc, cur);
-          output = extend_string(output, buffer);
-          fclose(format_stream);
-          free(buffer);
-        }
-      cur = cur->next;
-    }
+  char* output = NULL;
+  size_t sz = 0;
+  FILE* format_stream  = open_memstream(&output, &sz);
+  xmlElemDump(format_stream, doc, section_node);
+  fclose(format_stream);
   
-  return output;
+  return (xmlChar*) output;
 }
 
 meta
@@ -651,15 +627,11 @@ _parse_section(xmlNodePtr node, xmlDocPtr doc, article* art)
 char*
 parse_section(xmlChar* html, article* art)
 {
-  char* document = malloc(sizeof(char)*(strlen("<html></html>")+2+xmlStrlen(html)));
-  sprintf(document, "<html>%s</html>", (char*) html);
-
-  xmlDocPtr doc = xmlReadDoc(document,
+  xmlDocPtr doc = xmlReadDoc(html,
                              NULL,
                              NULL,
                              0);
 
-  free(document);
   xmlNodePtr cur = xmlDocGetRootElement(doc);
 
   return (char*) _parse_section(cur, doc, art);
