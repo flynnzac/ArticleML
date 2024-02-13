@@ -86,7 +86,7 @@ Here is an example bibliography file:
 
 An `<entry>` starts a new entry in the bibliography.  The `name` attribute gives the name you use to reference the entry in the main text.  There is no fixed format to what has to be included in the bibliography.  Any tag will be accepted and treated as an attribute that can be referenced in the bibilography formatting section (see documentation for full details) as `<source-attribute/>`.  However, for inline citations to work well, you should specify at least the `<author>` entry and the `<year>` entry.
 
-The advantage of this approach is that you can build up one large bibliography file over time and just reference what you need in each paper instead of needing to redo the bibliography once.  The design of the bibliography is very flexible and lets you set the format however you'd like and specify any attribute that makes sense for your sources.
+The advantage of this approach is that you can build up one large bibliography file over time and just reference what you need in each paper.  The design of the bibliography is very flexible and lets you set the format however you'd like and specify any attribute that makes sense for your sources.
 
 # Roadmap
 
