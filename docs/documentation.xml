@@ -150,7 +150,7 @@
 
     <ol>
       <li> The <lt/>lt/<gt/> and <lt/>gt<gt/> tags will insert <lt/> or <gt/>, respectively.</li>
-      <li> The <tag>tag</tag> tag will wrap its content in angle brackets, like: "<lt/>tag<gt/>hello<lt/>/tag<gt/> = <tag>hello</tag>.</li>
+      <li> The <tag>tag</tag> tag will wrap its content in angle brackets, like: <lt/>tag<gt/>hello<lt/>/tag<gt/> = <tag>hello</tag>.</li>
       <li> You can insert angle brackets inline using the <tag>m</tag> math environment (discussed more in <ref>Writing Math</ref>) with: <tag>m</tag>lt<lt/>/m<gt/> or <tag>m</tag>gt<lt/>/m<gt/>.</li>
     </ol>
     
