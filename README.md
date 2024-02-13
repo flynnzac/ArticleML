@@ -51,7 +51,7 @@ Here is a brief example of the ArticleML syntax:
 
     <p>It has some math though.</p>
 
-    <m style="display">a^(2) + b^(2) = c^(2)</m>
+    <m style="display">a^[2] + b^[2] = c^[2]</m>
     <m style="display">a x^[2] + b x + c = 0</m>
     <m style="display">@sum[i=1,n] i = @frac[n(n+1),2]</m>
 
