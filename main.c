@@ -43,6 +43,24 @@ main (int argc, char** argv)
   char buffer[ARTICLEML_BUFFER_SIZE];
   char* input = NULL;
 
+  char c;
+  bool headless = false;
+  
+  while ((c = getopt(argc, argv, "n")) != -1)
+    {
+      switch (c)
+        {
+        case 'n':
+          headless = true;
+          break;
+        case '?':
+          fprintf(stderr, "Unrecognized option: %c\n", optopt);
+          return 1;
+        default:
+          abort();
+        }
+    }
+
   while(fgets(buffer, sizeof(buffer), stdin)!= NULL)
     {
       if (input == NULL)
@@ -58,7 +76,7 @@ main (int argc, char** argv)
   if (input == NULL) return 1;
   
   article output = create_article(input);
-  write_article(stdout, &output);
+  write_article(stdout, &output, headless);
   free(input);
   free_article(&output);
 

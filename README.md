@@ -20,13 +20,16 @@ The plan is to make some pre-built binaries for popular systems to make this eas
 
 # Usage
 
-The `articleML` programs takes no arguments.  It reads from standard input and writes to standard output (i.e. it is a good Unix program).  Like so:
+The `articleML` programs takes the following arguments:
+
+- `n`: output "headless" HTML, i.e. without <html>, <body>, etc, tags.  Useful for embedding output in another page.
+
+It reads from standard input and writes to standard output (i.e. it is a good Unix program).  Like so:
 
 ```
 cat input.xml | articleml > output.html
 ```
 
-It may/will probably add styling options at some point, but this method will always work.
 
 # Syntax
 

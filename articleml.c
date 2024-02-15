@@ -726,11 +726,15 @@ write_bibliography(FILE* outf, xmlNodePtr cur, xmlDocPtr doc, bibentry* entry)
 
 
 void
-write_article(FILE* outf, article* art)
+write_article(FILE* outf, article* art, bool headless)
 {
-  fprintf(outf, "<html>");
-
-  fprintf(outf, "<head><style>");
+  if (!headless)
+    {
+      fprintf(outf, "<html>");
+      fprintf(outf, "<head>");
+    }
+  
+  fprintf(outf, "<style>");
   fprintf(outf, "#main-content { width: 70%; margin-left:15%; } ");
   fprintf(outf, "#title { font-size: 3em; text-align: center} ");
   fprintf(outf, ".math-display { text-align: center; font-size: 1.2em }");
@@ -740,8 +744,14 @@ write_article(FILE* outf, article* art)
     {
       fprintf(outf, "%s", art->style);
     }
+
+  fprintf(outf, "</style>");  
+  if (!headless)
+    {
+      fprintf(outf, "</head><body>");
+    }
   
-  fprintf(outf, "</style></head><body><div id=\"main-content\">");
+  fprintf(outf, "<div id=\"main-content\">");
   fprintf(outf, "<header>");
   
   if (art->metadata.title != NULL)
@@ -796,8 +806,11 @@ write_article(FILE* outf, article* art)
         }
       fprintf(outf, "</section>");
     }
-  fprintf(outf, "</div></body>");
-  fprintf(outf, "</html>");
+  fprintf(outf, "</div>");
+  if (!headless)
+    {
+      fprintf(outf, "</body></html>");
+    }
 }
 
 /* Build document object */

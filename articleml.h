@@ -42,6 +42,7 @@
 #include <time.h>
 #include <string.h>
 #include <stdbool.h>
+#include <unistd.h>
 
 /* Types */
 
@@ -107,7 +108,7 @@ struct stringlist
 typedef struct stringlist stringlist;
 
 article create_article(const char* input);
-void write_article(FILE* outf, article* art);
+void write_article(FILE* outf, article* art, bool headless);
 void free_article(article* art);
 
 xmlChar* alloc_string(const xmlChar* str);
