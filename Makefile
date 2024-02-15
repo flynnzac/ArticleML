@@ -9,9 +9,13 @@ articleml.so: articleml.o
 articleml.o: articleml.c m_leg.c
 	cc -g -fPIC -I/usr/include/libxml2 -c articleml.c -o articleml.o
 
-articleml: articleml.o main.c
-	cc -I/usr/include/libxml2 -c main.c -o main.o
-	cc -g -o articleml main.o articleml.o -lxml2
+articleml: articleml.o main.c markdown.c md4c/entity.c md4c/md4c.c md4c/md4c-html.c
+	cc -c md4c/entity.c entity.o
+	cc -c md4c/md4c.c md4c.o
+	cc -c md4c/md4c-html.c md4c-html.o
+	cc -g -I/usr/include/libxml2 -c markdown.c markdown.o
+	cc -g -I/usr/include/libxml2 -c main.c -o main.o
+	cc -g -o articleml main.o articleml.o entity.o md4c.o md4c-html.o markdown.o -lxml2
 
 m_leg.c: m.leg m.h
 	leg -o m_leg.c m.leg

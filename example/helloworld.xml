@@ -9,6 +9,10 @@
     <p>This is a simple document.</p>
   </section>
 
+  <markdown>
+    See, you can write in **markdown** now.  Pretty cool!
+  </markdown>
+
   <section name="Details">
     <p>As mentioned in the <ref>Introduction</ref>, this is a simple document.</p>
 

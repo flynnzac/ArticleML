@@ -36,6 +36,7 @@
 #define _XOPEN_SOURCE
 #define _GNU_SOURCE
 #include "articleml.h"
+#include "markdown.h"
 #include "m_leg.c"
 
 
@@ -518,6 +519,14 @@ _parse_section(xmlNodePtr node, xmlDocPtr doc, article* art)
       if (!xmlStrcmp(cur->name, (const xmlChar*) "text"))
         {
           output = extend_string(output, cur->content);
+        }
+      else if (!xmlStrcmp(cur->name, (const xmlChar*) "markdown"))
+        {
+          xmlChar* content = xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
+          char* html = render_markdown(content);
+          output = extend_string(output, html);
+          xmlFree(content);
+          free(html);
         }
       else if (!xmlStrcmp(cur->name, (const xmlChar*) "cite"))
         {
