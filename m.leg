@@ -68,6 +68,7 @@ Expr =
           a:Atom  "_"  Left - c1:Command - Right "^" Left - c2:Command - Right { $$ = tag_element(concat_element(a, concat_element(tag_element(c1, "mrow"),tag_element(c2, "mrow"))), "msubsup");}
         | a:Atom "_"  Left - c:Command - Right { $$ = tag_element(concat_element(a,tag_element(c, "mrow")), "msub");}
         | a:Atom "^"  Left - c:Command - Right {  $$ = tag_element(concat_element(tag_element(a, "mrow"),tag_element(c, "mrow")), "msup");}
+        | l:Left - a:Atom - r:Right { $$ = tag_element(a, "mrow"); }
         | Atom
 
 Atom = l:Left - u:UnitFunction - r:Right { $$ = tag_element(u, "mrow"); } |
@@ -312,7 +313,9 @@ Op  =
   | "}" { $$ = tag_element(RCURLY, "mo"); }
   | "lbracket" {$$ = tag_element("[", "mo");}
   | "rbracket" {$$ = tag_element("]", "mo");}
-
+  | "|" {$$ = tag_element("|", "mo");}
+  | "," {$$ = tag_element(",", "mo");}
+  | "sim" {$$ = tag_element("∼", "mo");}
 
 EOL = '\n' | '\r\n' | '\r' 
 

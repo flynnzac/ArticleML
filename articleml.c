@@ -737,7 +737,7 @@ write_article(FILE* outf, article* art, bool headless)
   fprintf(outf, "<style>");
   fprintf(outf, "#main-content { width: 70%; margin-left:15%; } ");
   fprintf(outf, "#title { font-size: 3em; text-align: center} ");
-  fprintf(outf, ".math-display { text-align: center; font-size: 1.2em }");
+  fprintf(outf, ".math-display { text-align: center; font-size: 1em }");
   fprintf(outf, ".math-inline { font-size: 1em }");
   
   if (art->style != NULL)
