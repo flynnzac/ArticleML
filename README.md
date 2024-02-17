@@ -23,6 +23,7 @@ The plan is to make some pre-built binaries for popular systems to make this eas
 The `articleML` programs takes the following arguments:
 
 - `-n`: output "headless" HTML, i.e. without `<html>, <body>`, etc, tags.  Useful for embedding output in another page.
+- `-s`: suppress default styles.
 
 It reads from standard input and writes to standard output (i.e. it is a good Unix program).  Like so:
 

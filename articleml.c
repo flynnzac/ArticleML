@@ -726,19 +726,23 @@ write_bibliography(FILE* outf, xmlNodePtr cur, xmlDocPtr doc, bibentry* entry)
 
 
 void
-write_article(FILE* outf, article* art, bool headless)
+write_article(FILE* outf, article* art, articleml_format fmt)
 {
-  if (!headless)
+  if (!fmt.headless)
     {
       fprintf(outf, "<html>");
       fprintf(outf, "<head>");
     }
-  
+
   fprintf(outf, "<style>");
-  fprintf(outf, "#main-content { width: 70%; margin-left:15%; } ");
-  fprintf(outf, "#title { font-size: 3em; text-align: center} ");
-  fprintf(outf, ".math-display { text-align: center; font-size: 1em }");
-  fprintf(outf, ".math-inline { font-size: 1em }");
+  if (fmt.style)
+    {
+
+      fprintf(outf, "#main-content { width: 70%; margin-left:15%; } ");
+      fprintf(outf, "#title { font-size: 3em; text-align: center} ");
+      fprintf(outf, ".math-display { text-align: center; font-size: 1em }");
+      fprintf(outf, ".math-inline { font-size: 1em }");
+    }
   
   if (art->style != NULL)
     {
@@ -746,7 +750,7 @@ write_article(FILE* outf, article* art, bool headless)
     }
 
   fprintf(outf, "</style>");  
-  if (!headless)
+  if (!fmt.headless)
     {
       fprintf(outf, "</head><body>");
     }
@@ -807,7 +811,7 @@ write_article(FILE* outf, article* art, bool headless)
       fprintf(outf, "</section>");
     }
   fprintf(outf, "</div>");
-  if (!headless)
+  if (!fmt.headless)
     {
       fprintf(outf, "</body></html>");
     }

@@ -107,8 +107,16 @@ struct stringlist
 
 typedef struct stringlist stringlist;
 
+struct articleml_format
+{
+  bool headless;
+  bool style;
+};
+
+typedef struct articleml_format articleml_format;
+
 article create_article(const char* input);
-void write_article(FILE* outf, article* art, bool headless);
+void write_article(FILE* outf, article* art, articleml_format fmt);
 void free_article(article* art);
 
 xmlChar* alloc_string(const xmlChar* str);

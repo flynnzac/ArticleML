@@ -44,14 +44,19 @@ main (int argc, char** argv)
   char* input = NULL;
 
   char c;
-  bool headless = false;
+  articleml_format fmt;
+  fmt.headless = false;
+  fmt.style = true;
   
-  while ((c = getopt(argc, argv, "n")) != -1)
+  while ((c = getopt(argc, argv, "ns")) != -1)
     {
       switch (c)
         {
         case 'n':
-          headless = true;
+          fmt.headless = true;
+          break;
+        case 's':
+          fmt.style = false;
           break;
         case '?':
           fprintf(stderr, "Unrecognized option: %c\n", optopt);
@@ -76,7 +81,7 @@ main (int argc, char** argv)
   if (input == NULL) return 1;
   
   article output = create_article(input);
-  write_article(stdout, &output, headless);
+  write_article(stdout, &output, fmt);
   free(input);
   free_article(&output);
 
