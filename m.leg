@@ -91,7 +91,7 @@ Left =  "[" { $$ = tag_element("[", "mo"); }
      
 Right = "]" { $$ = tag_element("]", "mo"); }
 
-Sep = "," -
+Sep = ";" -
 
 Unary = "@sqrt" {$$ = copy_string("sqrt");}
       | "@sum" {$$ = copy_string("sum");}
@@ -315,6 +315,7 @@ Op  =
   | "rbracket" {$$ = tag_element("]", "mo");}
   | "|" {$$ = tag_element("|", "mo");}
   | "," {$$ = tag_element(",", "mo");}
+  | "sc" { $$ = tag_element(";", "mo"); }
   | "sim" {$$ = tag_element("∼", "mo");}
 
 EOL = '\n' | '\r\n' | '\r' 

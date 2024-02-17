@@ -27,7 +27,7 @@ The `articleML` programs takes the following arguments:
 It reads from standard input and writes to standard output (i.e. it is a good Unix program).  Like so:
 
 ```
-cat input.xml | articleml > output.html
+articleml < input.xml > output.html
 ```
 
 
@@ -56,7 +56,7 @@ Here is a brief example of the ArticleML syntax:
 
     <m style="display">a^[2] + b^[2] = c^[2]</m>
     <m style="display">a x^[2] + b x + c = 0</m>
-    <m style="display">@sum[i=1,n] i = @frac[n(n+1),2]</m>
+    <m style="display">@sum[i=1;n] i = @frac[n(n+1);2]</m>
 
     <p>The End <m>qed</m></p>
 

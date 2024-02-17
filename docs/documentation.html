@@ -1,4 +1,4 @@
-<html><head><style>#main-content { width: 70%; margin-left:15%; } #title { font-size: 3em; text-align: center} .math-display { text-align: center; font-size: 1.2em }.math-inline { font-size: 1em }
+<html><head><style>#main-content { width: 70%; margin-left:15%; } #title { font-size: 3em; text-align: center} .math-display { text-align: center; font-size: 1em }.math-inline { font-size: 1em }
     table {
     border: 0.1em solid black;
     width:100%;
@@ -21,7 +21,7 @@
     .column {
     flex: 50%;
     }    
-  </style></head><body><div id="main-content"><header><div id="title">ArticleML</div><span id="author">Zach Flynn</span><br/><span id="date">2024-02-14</span><br/></header><section id="Table of Contents" class="normal-section"><h3>Table of Contents</h3>
+  </style></head><body><div id="main-content"><header><div id="title">ArticleML</div><span id="author">Zach Flynn</span><br/><span id="date">2024-02-17</span><br/></header><section id="Table of Contents" class="normal-section"><h3>Table of Contents</h3>
     <ol >
       <li ><a href="#Introduction">Introduction</a></li>
       <li ><a href="#Writing an Article">Writing an Article</a></li>
@@ -216,7 +216,7 @@
     </p>
 
     <p > 
-      To get a sense of what the &lt;m&gt; syntax looks like: <code >@sum[i=1, n] i = @frac[n(n+1), 2]</code> renders to:
+      To get a sense of what the &lt;m&gt; syntax looks like: <code >@sum[i=1; n] i = @frac[n(n+1); 2]</code> renders to:
     </p>
     
     <div class="math-display"><math><munderover><mo>Σ</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mrow><mi>n</mi></mrow></munderover><mi>i</mi><mo>=</mo><mfrac><mrow><mi>n</mi><mo>(</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo>)</mo></mrow><mrow><mn>2</mn></mrow></mfrac></math></div>
@@ -228,7 +228,7 @@
     <pre ><code >
       
                &lt;m style="display"&gt;
-               @sum[i=1,n] i = @frac[n(n+1), 2]
+               @sum[i=1;n] i = @frac[n(n+1); 2]
                &lt;/m&gt;
     
     </code></pre>
@@ -265,7 +265,7 @@
     <p >
       Use double parenthesis to write matrices in &lt;m&gt;:
       <pre ><code >
-        [[1,2,3],[4,5,6]]
+        [[1;2;3];[4;5;6]]
       </code></pre>
     </p>
 
@@ -275,19 +275,22 @@
     
 <div class="math-display"><math><mrow><mo>[</mo><mtable><mtr><mtd><mn>1</mn></mtd><mtd><mn>2</mn></mtd><mtd><mn>3</mn></mtd></mtr><mtr><mtd><mn>4</mn></mtd><mtd><mn>5</mn></mtd><mtd><mn>6</mn></mtd></mtr></mtable><mo>]</mo></mrow></math></div>    
 
-    <p >You can change the style of the parenthesis by changing the outer parenthesis (keeping the inner parenthesis as square brackets):
-    <pre ><code >
-      ([1,2,3],[4,5,6])
-    </code></pre>
+    <p >
+      Change the parenthesis style like this:
+      <pre ><code >
+        ([1;2;3];[4;5;6])
+      </code></pre>
     </p>
 
-    <p >Which outputs:</p>
-    
-<div class="math-display"><math><mrow><mo>(</mo><mtable><mtr><mtd><mn>1</mn></mtd><mtd><mn>2</mn></mtd><mtd><mn>3</mn></mtd></mtr><mtr><mtd><mn>4</mn></mtd><mtd><mn>5</mn></mtd><mtd><mn>6</mn></mtd></mtr></mtable><mo>)</mo></mrow></math></div>        
-    
-
     <p >
-      You can mix math and text in the natural way: <code >@under["max", x] space u(x) quad "st:" quad x ge 0</code>, which renders as:
+      Which outputs the following:
+    </p>
+    
+    
+<div class="math-display"><math><mrow><mo>(</mo><mtable><mtr><mtd><mn>1</mn></mtd><mtd><mn>2</mn></mtd><mtd><mn>3</mn></mtd></mtr><mtr><mtd><mn>4</mn></mtd><mtd><mn>5</mn></mtd><mtd><mn>6</mn></mtd></mtr></mtable><mo>)</mo></mrow></math></div>    
+    
+    <p >
+      You can mix math and text in the natural way: <code >@under["max"; x] space u(x) quad "st:" quad x ge 0</code>, which renders as:
     </p>
     
     <div class="math-display"><math><munder><mrow><mtext>max</mtext></mrow><mrow><mi>x</mi></mrow></munder><mo>&nbsp;</mo><mi>u</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>&nbsp;&nbsp;</mo><mtext>st:</mtext><mo>&nbsp;&nbsp;</mo><mi>x</mi><mo>≥</mo><mn>0</mn></math></div>
@@ -297,7 +300,7 @@
     </p>
 
     <p >
-      Lastly, if you want to pass something into the MathML output exactly as written without formatting, use backticks (`) to delineate the text, i.e.: <code >@color[`red`, X]</code>.  If the "red" weren't backticked here, then it would get formatted as an identifier which isn't what the color function is expecting.  See the output below:
+      Lastly, if you want to pass something into the MathML output exactly as written without formatting, use backticks (`) to delineate the text, i.e.: <code >@color[`red`; X]</code>.  If the "red" weren't backticked here, then it would get formatted as an identifier which isn't what the color function is expecting.  See the output below:
     </p>
     
 <div class="math-display"><math><mstyle mathcolor="red"><mi>X</mi></mstyle></math></div>    
@@ -603,7 +606,11 @@
           <tr >
             <td >rbracket</td>
             <td ><span class="math-inline"><math><mo>]</mo></math></span></td>
-          </tr>          
+          </tr>
+          <tr >
+            <td >sc</td>
+            <td ><span class="math-inline"><math><mo>;</mo></math></span></td>
+          </tr>              
         </table>
         <table >
           <tr >
@@ -1098,36 +1105,36 @@
             <th >Output</th>
           </tr>
           <tr >
-            <td >@frac[X,Y]</td>
+            <td >@frac[X;Y]</td>
             <td ><span class="math-inline"><math><mfrac><mrow><mi>X</mi></mrow><mrow><mi>Y</mi></mrow></mfrac></math></span></td>
           </tr>
           <tr >
-            <td >@sum[X,Y]</td>
+            <td >@sum[X;Y]</td>
             <td ><span class="math-inline"><math><munderover><mo>Σ</mo><mrow><mi>X</mi></mrow><mrow><mi>Y</mi></mrow></munderover></math></span></td>
           </tr>
           <tr >
-            <td >@root[X,Y]</td>
+            <td >@root[X;Y]</td>
             <td ><span class="math-inline"><math><mroot><mi>X</mi><mi>Y</mi></mroot></math></span></td>
           </tr>
 
           <tr >
-            <td >@color[`red`,Y]</td>
+            <td >@color[`red`;Y]</td>
             <td ><span class="math-inline"><math><mstyle mathcolor="red"><mi>Y</mi></mstyle></math></span></td>
           </tr>
           <tr >
-            <td >@super[X,Y]</td>
+            <td >@super[X;Y]</td>
             <td ><span class="math-inline"><math><msup><mi>X</mi><mi>Y</mi></msup></math></span></td>
           </tr>
           <tr >
-            <td >@sub[X,Y]</td>
+            <td >@sub[X;Y]</td>
             <td ><span class="math-inline"><math><msub><mi>X</mi><mi>Y</mi></msub></math></span></td>
           </tr>
           <tr >
-            <td >@over[X,Y]</td>
+            <td >@over[X;Y]</td>
             <td ><span class="math-inline"><math><mover><mi>X</mi><mi>Y</mi></mover></math></span></td>
           </tr>
           <tr >
-            <td >@under[X,Y]</td>
+            <td >@under[X;Y]</td>
             <td ><span class="math-inline"><math><munder><mrow><mi>X</mi></mrow><mrow><mi>Y</mi></mrow></munder></math></span></td>
           </tr>          
         </table>
@@ -1144,7 +1151,7 @@
           </tr>
           <tr >
             <td >
-              @underover[X,Y,Z]
+              @underover[X;Y;Z]
             </td>
             <td ><span class="math-inline"><math><munderover><mo><mi>X</mi></mo><mrow><mi>Y</mi></mrow><mrow><mi>Z</mi></mrow></munderover></math></span></td>
           </tr>

@@ -226,10 +226,10 @@
     </p>
 
     <p> 
-      To get a sense of what the <tag>m</tag> syntax looks like: <code>@sum[i=1, n] i = @frac[n(n+1), 2]</code> renders to:
+      To get a sense of what the <tag>m</tag> syntax looks like: <code>@sum[i=1; n] i = @frac[n(n+1); 2]</code> renders to:
     </p>
     
-    <m style="display">@sum[i=1,n] i = @frac[n(n+1),2]</m>
+    <m style="display">@sum[i=1;n] i = @frac[n(n+1);2]</m>
 
     <p>
       Math is written between <tag>m</tag> tags, like for the above:
@@ -238,7 +238,7 @@
     <pre><code>
       <![CDATA[
                &lt;m style="display"&gt;
-               @sum[i=1,n] i = @frac[n(n+1), 2]
+               @sum[i=1;n] i = @frac[n(n+1); 2]
                &lt;/m&gt;]]>
     </code></pre>
 
@@ -274,7 +274,7 @@
     <p>
       Use double parenthesis to write matrices in <tag>m</tag>:
       <pre><code>
-        [[1,2,3],[4,5,6]]
+        [[1;2;3];[4;5;6]]
       </code></pre>
     </p>
 
@@ -282,36 +282,39 @@
       Which outputs the following:
     </p>
     <m style="display">
-      [[1,2,3],[4,5,6]]
+      [[1;2;3];[4;5;6]]
     </m>
 
-    <p>You can change the style of the parenthesis by changing the outer parenthesis (keeping the inner parenthesis as square brackets):
-    <pre><code>
-      ([1,2,3],[4,5,6])
-    </code></pre>
+    <p>
+      Change the parenthesis style like this:
+      <pre><code>
+        ([1;2;3];[4;5;6])
+      </code></pre>
     </p>
-
-    <p>Which outputs:</p>
-    <m style="display">
-      ([1,2,3],[4,5,6])
-    </m>    
-    
 
     <p>
-      You can mix math and text in the natural way: <code>@under["max", x] space u(x) quad "st:" quad x ge 0</code>, which renders as:
+      Which outputs the following:
     </p>
     
-    <m style="display">@under["max", x] space u(x) quad "st:" quad x ge 0</m>
+    <m style="display">
+      ([1;2;3];[4;5;6])
+    </m>
+    
+    <p>
+      You can mix math and text in the natural way: <code>@under["max"; x] space u(x) quad "st:" quad x ge 0</code>, which renders as:
+    </p>
+    
+    <m style="display">@under["max"; x] space u(x) quad "st:" quad x ge 0</m>
 
     <p>
       Generally, you should quote long strings in <tag>m</tag>.  Both because it will format better and because substrings would otherwise get picked up as symbols.  For example, <code>quadratic</code> without quotes renders as: <m>quadratic</m> because "quad" is a spacing operator.  Writing <code>"quadratic"</code> gives probably what you want: <m>"quadratic"</m>.
     </p>
 
     <p>
-      Lastly, if you want to pass something into the MathML output exactly as written without formatting, use backticks (`) to delineate the text, i.e.: <code>@color[`red`, X]</code>.  If the "red" weren't backticked here, then it would get formatted as an identifier which isn't what the color function is expecting.  See the output below:
+      Lastly, if you want to pass something into the MathML output exactly as written without formatting, use backticks (`) to delineate the text, i.e.: <code>@color[`red`; X]</code>.  If the "red" weren't backticked here, then it would get formatted as an identifier which isn't what the color function is expecting.  See the output below:
     </p>
     <m style="display">
-      @color[`red`, X]
+      @color[`red`; X]
     </m>
 
     <p>
@@ -620,7 +623,11 @@
           <tr>
             <td>rbracket</td>
             <td><m>rbracket</m></td>
-          </tr>          
+          </tr>
+          <tr>
+            <td>sc</td>
+            <td><m>sc</m></td>
+          </tr>              
         </table>
         <table>
           <tr>
@@ -1115,37 +1122,37 @@
             <th>Output</th>
           </tr>
           <tr>
-            <td>@frac[X,Y]</td>
-            <td><m>@frac[X,Y]</m></td>
+            <td>@frac[X;Y]</td>
+            <td><m>@frac[X;Y]</m></td>
           </tr>
           <tr>
-            <td>@sum[X,Y]</td>
-            <td><m>@sum[X,Y]</m></td>
+            <td>@sum[X;Y]</td>
+            <td><m>@sum[X;Y]</m></td>
           </tr>
           <tr>
-            <td>@root[X,Y]</td>
-            <td><m>@root[X,Y]</m></td>
+            <td>@root[X;Y]</td>
+            <td><m>@root[X;Y]</m></td>
           </tr>
 
           <tr>
-            <td>@color[`red`,Y]</td>
-            <td><m>@color[`red`,Y]</m></td>
+            <td>@color[`red`;Y]</td>
+            <td><m>@color[`red`;Y]</m></td>
           </tr>
           <tr>
-            <td>@super[X,Y]</td>
-            <td><m>@super[X,Y]</m></td>
+            <td>@super[X;Y]</td>
+            <td><m>@super[X;Y]</m></td>
           </tr>
           <tr>
-            <td>@sub[X,Y]</td>
-            <td><m>@sub[X,Y]</m></td>
+            <td>@sub[X;Y]</td>
+            <td><m>@sub[X;Y]</m></td>
           </tr>
           <tr>
-            <td>@over[X,Y]</td>
-            <td><m>@over[X,Y]</m></td>
+            <td>@over[X;Y]</td>
+            <td><m>@over[X;Y]</m></td>
           </tr>
           <tr>
-            <td>@under[X,Y]</td>
-            <td><m>@under[X,Y]</m></td>
+            <td>@under[X;Y]</td>
+            <td><m>@under[X;Y]</m></td>
           </tr>          
         </table>
         <table>
@@ -1161,9 +1168,9 @@
           </tr>
           <tr>
             <td>
-              @underover[X,Y,Z]
+              @underover[X;Y;Z]
             </td>
-            <td><m>@underover[X,Y,Z]</m></td>
+            <td><m>@underover[X;Y;Z]</m></td>
           </tr>
         </table>
       </div>

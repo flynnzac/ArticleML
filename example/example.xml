@@ -34,7 +34,7 @@
       In fact, <i>my</i> model is very good.  It looks like this.
     </p>
     <m style="display">
-      @under["max", p^[top] x le w] u(x)
+      @under["max"; p^[top] x le w] u(x)
     </m>
 
     <p>
