@@ -738,7 +738,7 @@ write_article(FILE* outf, article* art, articleml_format fmt)
   if (fmt.style)
     {
 
-      fprintf(outf, "#main-content { width: 70%; margin-left:15%; } ");
+      fprintf(outf, "#main-content { width: 70%; margin-left:15%; line-height: 1.8 } ");
       fprintf(outf, "#title { font-size: 3em; text-align: center} ");
       fprintf(outf, ".math-display { text-align: center; font-size: 1em }");
       fprintf(outf, ".math-inline { font-size: 1em }");

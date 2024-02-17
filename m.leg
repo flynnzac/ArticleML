@@ -317,6 +317,7 @@ Op  =
   | "," {$$ = tag_element(",", "mo");}
   | "sc" { $$ = tag_element(";", "mo"); }
   | "sim" {$$ = tag_element("∼", "mo");}
+  | "'" {$$ = tag_element("'", "mo");}
 
 EOL = '\n' | '\r\n' | '\r' 
 
