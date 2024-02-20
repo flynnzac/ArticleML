@@ -40,5 +40,21 @@
     <p>
       Consumers choose <m>x</m> to maximize <m>u</m>.
     </p>
+
+    <theorem refproof="yes">My Theorem</theorem>
+
+    <theorem statement="yes">My Theorem</theorem>
+    
+    <theorem proof="yes">My Theorem</theorem>
+    
   </section>
+
+  <theorem name="My Theorem">
+    <statement>
+      <p>This is my statement of the theorem.</p>
+    </statement>
+    <proof>
+      <p>This is my proof of the theorem.</p>
+    </proof>
+  </theorem>
 </article>

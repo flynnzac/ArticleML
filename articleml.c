@@ -121,6 +121,17 @@ find_bibentry(xmlChar* name, bibliography bib)
   
 }
 
+theorem*
+find_theorem(xmlChar* name, article* art)
+{
+  for (uint64_t i=0; i < art->n_theorems; i++)
+    {
+      if (!xmlStrcmp(art->theorems[i].name, name))
+        return &art->theorems[i];
+    }
+  return NULL;
+}
+
 bool
 is_bibentry_used (bibentry* entry, bibliography* bib)
 {
@@ -358,7 +369,7 @@ create_open_tag(xmlNodePtr node)
 /* Parsers */
 
 xmlChar*
-copy_section_html(xmlNodePtr section_node, xmlDocPtr doc, article* art)
+copy_section_html(xmlNodePtr section_node, xmlDocPtr doc)
 {
   char* output = NULL;
   size_t sz = 0;
@@ -540,6 +551,87 @@ _parse_section(xmlNodePtr node, xmlDocPtr doc, article* art)
           free_stringlist(&head);
           xmlFree(text);
         }
+      else if (!xmlStrcmp(cur->name, (const xmlChar*) "theorem"))
+        {
+          xmlChar* name = xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
+          theorem* thm = find_theorem(name, art);
+          xmlFree(name);
+
+          bool proof = false;
+          bool statement = false;
+          bool refproof = false;
+
+          xmlChar* use_proof = xmlGetProp(cur, "proof");
+          xmlChar* use_statement = xmlGetProp(cur, "statement");
+          xmlChar* use_refproof = xmlGetProp(cur, "refproof");
+
+          if ((use_proof != NULL) && (!xmlStrcmp(use_proof, (const xmlChar*) "yes")))
+            {
+              proof = true;
+            }
+          if ((use_statement != NULL) && (!xmlStrcmp(use_statement, (const xmlChar*) "yes")))
+            {
+              statement = true;
+            }
+          if ((use_refproof != NULL) && (!xmlStrcmp(use_refproof, (const xmlChar*) "yes")))
+            {
+              refproof = true;
+            }
+
+          xmlFree(use_proof);
+          xmlFree(use_statement);
+          xmlFree(use_refproof);
+          
+          stringlist head;
+          stringlist* tail;
+          if (proof || statement)
+            {
+              head = create_string("<div class=\"theorem\" id=\"");
+              tail = &head;
+              tail = append_to_stringlist(tail, thm->name);
+
+              if (!statement)
+                {
+                  tail = append_to_stringlist(tail, "-proof");
+                }
+              tail = append_to_stringlist(tail, "\">");
+              tail = append_to_stringlist(tail, "<div class=\"theorem-title\">");
+              tail = append_to_stringlist(tail, thm->name);
+              tail = append_to_stringlist(tail, "</div>");
+
+              if (statement && (thm->statement != NULL))
+                {
+                  tail = append_to_stringlist(tail, "<div class=\"theorem-statement\">");
+                  tail = append_to_stringlist(tail, thm->statement);
+                  tail = append_to_stringlist(tail, "</div>");
+                }
+              if (proof && (thm->proof != NULL))
+                {
+                  tail = append_to_stringlist(tail, "<div class=\"theorem-proof\">");
+                  tail = append_to_stringlist(tail, thm->proof);
+                  tail = append_to_stringlist(tail, "</div>");
+                }
+              tail = append_to_stringlist(tail, "</div>");
+            }
+          else
+            {
+              head = create_string("<a href=\"#");
+              tail = &head;
+              tail = append_to_stringlist(tail, thm->name);
+
+              if (refproof)
+                {
+                  tail = append_to_stringlist(tail, "-proof");
+                }
+              tail = append_to_stringlist(tail, "\">");
+              tail = append_to_stringlist(tail, thm->name);
+              tail = append_to_stringlist(tail, "</a>");
+            }
+
+          output = add_stringlist(output, &head);
+          free_stringlist(&head);
+          
+        }
       else if (!xmlStrcmp(cur->name, (const xmlChar*) "ref"))
         {
           xmlChar* content = xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
@@ -681,6 +773,29 @@ parse_section(xmlChar* html, article* art)
   return (char*) _parse_section(cur, doc, art);
 }
 
+/* theorems, definitions, and assumptions */
+
+void
+structure_theorem(theorem* thm, xmlNodePtr cur, xmlDocPtr doc)
+{
+  thm->statement = NULL;
+  thm->proof = NULL;
+
+  xmlNodePtr tmp = cur->xmlChildrenNode;
+  while (tmp != NULL)
+    {
+      if (!xmlStrcmp(tmp->name, (const xmlChar*) "statement"))
+        {
+          thm->statement = copy_section_html(tmp, doc);
+        }
+      else if (!xmlStrcmp(tmp->name, (const xmlChar*) "proof"))
+        {
+          thm->proof = copy_section_html(tmp, doc);
+        }
+      tmp = tmp->next;
+    }
+}
+
 /* For writing out. */
 
 void
@@ -739,7 +854,7 @@ write_article(FILE* outf, article* art, articleml_format fmt)
     {
 
       fprintf(outf, "#main-content { width: 70%; margin-left:15%; line-height: 1.8 } ");
-      fprintf(outf, "#title { font-size: 3em; text-align: center} ");
+      fprintf(outf, "#title { font-size: 2em; text-align: center; line-height: 1.8} ");
       fprintf(outf, ".math-display { text-align: center; font-size: 1em }");
       fprintf(outf, ".math-inline { font-size: 1em }");
     }
@@ -829,6 +944,9 @@ create_article(const char* input)
   output.has_bib = false;
   output.sections = NULL;
   output.n_sections = 0;
+  output.theorems = NULL;
+  output.n_theorems = 0;
+  
   output.style = NULL;
   
   output.abstract.html = NULL;
@@ -857,7 +975,7 @@ create_article(const char* input)
         {
           output.abstract.title = (xmlChar*) alloc_string("Abstract");
           output.abstract.name = (xmlChar*) alloc_string("Abstract");
-          output.abstract.html = copy_section_html(cur, doc, &output);
+          output.abstract.html = copy_section_html(cur, doc);
           
         }
       else if (!xmlStrcmp(cur->name, (const xmlChar*) "section"))
@@ -876,7 +994,7 @@ create_article(const char* input)
               sec.title = alloc_string(sec.name);
             }
 
-          sec.html = copy_section_html(cur, doc, &output);
+          sec.html = copy_section_html(cur, doc);
 
           output.n_sections += 1;
 
@@ -887,6 +1005,23 @@ create_article(const char* input)
 
           output.sections[output.n_sections-1] = sec;
         }
+      else if (!xmlStrcmp(cur->name, (const xmlChar*) "theorem"))
+        {
+          theorem thm;
+          thm.name = xmlGetProp(cur, "name");
+          thm.title = xmlGetProp(cur, "title");
+
+          structure_theorem(&thm, cur, doc);
+
+          output.n_theorems++;
+          
+          if (output.theorems == NULL)
+            output.theorems = malloc(sizeof(theorem));
+          else
+            output.theorems = realloc(output.theorems, sizeof(theorem)*output.n_theorems);
+
+          output.theorems[output.n_theorems-1] = thm;
+        }
       else if (!xmlStrcmp(cur->name, (const xmlChar*) "bibliography"))
         {
           output.bib = parse_bibliography(cur, doc);
@@ -895,6 +1030,14 @@ create_article(const char* input)
       cur = cur->next;
     }
 
+  for (uint64_t i=0; i < output.n_theorems; i++)
+    {
+      if (output.theorems[i].statement != NULL)
+        output.theorems[i].statement = parse_section(output.theorems[i].statement, &output);
+      if (output.theorems[i].proof != NULL)
+        output.theorems[i].proof = parse_section(output.theorems[i].proof, &output);
+    }
+  
   for (uint64_t i=0; i < output.n_sections; i++)
     {
       output.sections[i].html = parse_section(output.sections[i].html, &output);
@@ -902,6 +1045,7 @@ create_article(const char* input)
 
   if (output.abstract.html != NULL)
     output.abstract.html = parse_section(output.abstract.html, &output);
+
 
   return output;
 

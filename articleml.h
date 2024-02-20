@@ -86,15 +86,27 @@ struct section
 
 typedef struct section section;
 
+struct theorem
+{
+  xmlChar* name;
+  xmlChar* title;
+  xmlChar* statement;
+  xmlChar* proof;
+};
+
+typedef struct theorem theorem;
+
 struct article
 {
   meta metadata;
   bibliography bib;
   bool has_bib;
+  xmlChar* style;
   section abstract;
   section* sections;
-  xmlChar* style;
   uint64_t n_sections;
+  theorem* theorems;
+  uint64_t n_theorems;
 };
 
 typedef struct article article;
