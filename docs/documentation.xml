@@ -327,6 +327,38 @@
     </p>
   </section>
 
+  <section name="Theorems, Assumptions, Definitions">
+
+    <p>You can decare theorems, assumptions, or definitions by doing the following:</p>
+
+    <pre><code>
+      <tag>article</tag>
+      <lt/>theorem name="My Theorem"<gt/>
+      <tag>statement</tag>
+      This is my statement of the theorem.
+      <lt/>/statement<gt/>
+      <tag>discussion</tag>
+      Proof. This is the proof of the theorem.
+      <lt/>/discussion<gt/>
+      <lt/>/theorem<gt/>
+    </code></pre>
+
+    <p>Assumptions and Definitions are specified in the same way except they use the <tag>assumption</tag> and <tag>definition</tag> tags.  Both the <tag>statement</tag> and <tag>discussion</tag> section are optional.</p>
+
+    <p>To insert a theorem, assumption, or definition within a <tag>section</tag>, use:</p>
+
+    <pre><code>
+      <lt/>theorem statement="yes"<gt/>Theorem Name<lt/>/theorem<gt/> (inserts the theorem label and statement)
+      <lt/>theorem discussion="yes"<gt/>Theorem Name<lt/>/theorem<gt/> (inserts the theorem label and the discussion)
+      <lt/>theorem discussion="yes" statement="yes"<gt/>Theorem Name<lt/>/theorem<gt/> (inserts the theorem label and both the statement and the discussion)
+      <lt/>theorem refdisc="yes"<gt/>Theorem Name<lt/>/theorem<gt/> (inserts a link to a discussion-only insert of theorem, use for linking to a proof you put in a later section, for example).
+      <lt/>theorem<gt/>Theorem Name<lt/>/theorem<gt/> (inserts a link to a statement of the theorem).
+    </code></pre>
+
+    <p>You can use any code that you would use in writing sections within the <tag>statement</tag> and <tag>discussion</tag> tags.</p>
+
+  </section>
+
   
   <section name="Custom Styling">
     <p>
@@ -343,6 +375,20 @@
     th,td {
     border-bottom: 0.1em solid black;
     }
+    body {
+    background-color: #eee;
+    }
+    #main-content {
+    background-color: white;
+    padding:2em;
+    }
+    .row {
+    display: flex;
+    }
+
+    .column {
+    flex: 50%;
+    }    
     &lt;/style&gt;
     ]]></code></pre>
 

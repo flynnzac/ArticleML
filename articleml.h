@@ -36,6 +36,7 @@
 
 #ifndef ARTICLEML_H
 #define ARTICLEML_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <libxml/xmlreader.h>
@@ -89,9 +90,8 @@ typedef struct section section;
 struct theorem
 {
   xmlChar* name;
-  xmlChar* title;
   xmlChar* statement;
-  xmlChar* proof;
+  xmlChar* discussion;
 };
 
 typedef struct theorem theorem;
@@ -107,6 +107,11 @@ struct article
   uint64_t n_sections;
   theorem* theorems;
   uint64_t n_theorems;
+  theorem* assumptions;
+  uint64_t n_assumptions;
+  theorem* definitions;
+  uint64_t n_definitions;
+  
 };
 
 typedef struct article article;

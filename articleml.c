@@ -122,12 +122,34 @@ find_bibentry(xmlChar* name, bibliography bib)
 }
 
 theorem*
-find_theorem(xmlChar* name, article* art)
+find_theorem(xmlChar* name, const xmlChar* type, article* art, uint64_t* index)
 {
-  for (uint64_t i=0; i < art->n_theorems; i++)
+  theorem* list;
+  uint64_t list_size;
+
+  if (!xmlStrcmp(type, "theorem"))
     {
-      if (!xmlStrcmp(art->theorems[i].name, name))
-        return &art->theorems[i];
+      list = art->theorems;
+      list_size = art->n_theorems;
+    }
+  else if (!xmlStrcmp(type, "assumption"))
+    {
+      list = art->assumptions;
+      list_size = art->n_assumptions;
+    }
+  else if (!xmlStrcmp(type, "definition"))
+    {
+      list = art->definitions;
+      list_size = art->n_definitions;
+    }
+  
+  for (uint64_t i=0; i < list_size; i++)
+    {
+      if (!xmlStrcmp(list[i].name, name))
+        {
+          *index = i;
+          return &list[i];
+        }
     }
   return NULL;
 }
@@ -551,40 +573,59 @@ _parse_section(xmlNodePtr node, xmlDocPtr doc, article* art)
           free_stringlist(&head);
           xmlFree(text);
         }
-      else if (!xmlStrcmp(cur->name, (const xmlChar*) "theorem"))
+      else if (!xmlStrcmp(cur->name, (const xmlChar*) "theorem") ||
+               !xmlStrcmp(cur->name, (const xmlChar*) "assumption") ||
+               !xmlStrcmp(cur->name, (const xmlChar*) "definition"))
         {
           xmlChar* name = xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
-          theorem* thm = find_theorem(name, art);
+          uint64_t thm_no;
+          theorem* thm = find_theorem(name, cur->name, art, &thm_no);
+          if (thm == NULL)
+            {
+              xmlFree(name);
+              goto next_tag;
+            }
+              
+          char thm_no_str[21];
+          sprintf(thm_no_str, "%llu", thm_no+1);
           xmlFree(name);
 
-          bool proof = false;
+          bool discussion = false;
           bool statement = false;
-          bool refproof = false;
+          bool refdisc = false;
 
-          xmlChar* use_proof = xmlGetProp(cur, "proof");
+          char* label = "";
+          if (!xmlStrcmp(cur->name, (const xmlChar*) "theorem"))
+            label = "Theorem";
+          else if (!xmlStrcmp(cur->name, (const xmlChar*) "assumption"))
+            label = "Assumption";
+          else if (!xmlStrcmp(cur->name, (const xmlChar*) "definition"))
+            label = "Definition";
+
+          xmlChar* use_discussion = xmlGetProp(cur, "discussion");
           xmlChar* use_statement = xmlGetProp(cur, "statement");
-          xmlChar* use_refproof = xmlGetProp(cur, "refproof");
+          xmlChar* use_refdisc = xmlGetProp(cur, "refdisc");
 
-          if ((use_proof != NULL) && (!xmlStrcmp(use_proof, (const xmlChar*) "yes")))
+          if ((use_discussion != NULL) && (!xmlStrcmp(use_discussion, (const xmlChar*) "yes")))
             {
-              proof = true;
+              discussion = true;
             }
           if ((use_statement != NULL) && (!xmlStrcmp(use_statement, (const xmlChar*) "yes")))
             {
               statement = true;
             }
-          if ((use_refproof != NULL) && (!xmlStrcmp(use_refproof, (const xmlChar*) "yes")))
+          if ((use_refdisc != NULL) && (!xmlStrcmp(use_refdisc, (const xmlChar*) "yes")))
             {
-              refproof = true;
+              refdisc = true;
             }
 
-          xmlFree(use_proof);
+          xmlFree(use_discussion);
           xmlFree(use_statement);
-          xmlFree(use_refproof);
+          xmlFree(use_refdisc);
           
           stringlist head;
           stringlist* tail;
-          if (proof || statement)
+          if (discussion || statement)
             {
               head = create_string("<div class=\"theorem\" id=\"");
               tail = &head;
@@ -592,11 +633,13 @@ _parse_section(xmlNodePtr node, xmlDocPtr doc, article* art)
 
               if (!statement)
                 {
-                  tail = append_to_stringlist(tail, "-proof");
+                  tail = append_to_stringlist(tail, "-disc");
                 }
               tail = append_to_stringlist(tail, "\">");
               tail = append_to_stringlist(tail, "<div class=\"theorem-title\">");
-              tail = append_to_stringlist(tail, thm->name);
+              tail = append_to_stringlist(tail, label);
+              tail = append_to_stringlist(tail, " ");
+              tail = append_to_stringlist(tail, thm_no_str);
               tail = append_to_stringlist(tail, "</div>");
 
               if (statement && (thm->statement != NULL))
@@ -605,10 +648,10 @@ _parse_section(xmlNodePtr node, xmlDocPtr doc, article* art)
                   tail = append_to_stringlist(tail, thm->statement);
                   tail = append_to_stringlist(tail, "</div>");
                 }
-              if (proof && (thm->proof != NULL))
+              if (discussion && (thm->discussion != NULL))
                 {
-                  tail = append_to_stringlist(tail, "<div class=\"theorem-proof\">");
-                  tail = append_to_stringlist(tail, thm->proof);
+                  tail = append_to_stringlist(tail, "<div class=\"theorem-discussion\">");
+                  tail = append_to_stringlist(tail, thm->discussion);
                   tail = append_to_stringlist(tail, "</div>");
                 }
               tail = append_to_stringlist(tail, "</div>");
@@ -619,12 +662,14 @@ _parse_section(xmlNodePtr node, xmlDocPtr doc, article* art)
               tail = &head;
               tail = append_to_stringlist(tail, thm->name);
 
-              if (refproof)
+              if (refdisc)
                 {
-                  tail = append_to_stringlist(tail, "-proof");
+                  tail = append_to_stringlist(tail, "-disc");
                 }
               tail = append_to_stringlist(tail, "\">");
-              tail = append_to_stringlist(tail, thm->name);
+              tail = append_to_stringlist(tail, label);
+              tail = append_to_stringlist(tail, " ");
+              tail = append_to_stringlist(tail, thm_no_str);
               tail = append_to_stringlist(tail, "</a>");
             }
 
@@ -636,7 +681,7 @@ _parse_section(xmlNodePtr node, xmlDocPtr doc, article* art)
         {
           xmlChar* content = xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
           section* sec = find_section(content, art);
-          /* xmlFree(content); */
+          xmlFree(content);
           if (sec != NULL)
             {
               xmlChar* text = (xmlChar*) create_section_link(sec);
@@ -753,7 +798,7 @@ _parse_section(xmlNodePtr node, xmlDocPtr doc, article* art)
             }
 
         }
-      cur = cur->next;
+    next_tag: cur = cur->next;
     }
 
   return output;
@@ -779,7 +824,7 @@ void
 structure_theorem(theorem* thm, xmlNodePtr cur, xmlDocPtr doc)
 {
   thm->statement = NULL;
-  thm->proof = NULL;
+  thm->discussion = NULL;
 
   xmlNodePtr tmp = cur->xmlChildrenNode;
   while (tmp != NULL)
@@ -788,9 +833,9 @@ structure_theorem(theorem* thm, xmlNodePtr cur, xmlDocPtr doc)
         {
           thm->statement = copy_section_html(tmp, doc);
         }
-      else if (!xmlStrcmp(tmp->name, (const xmlChar*) "proof"))
+      else if (!xmlStrcmp(tmp->name, (const xmlChar*) "discussion"))
         {
-          thm->proof = copy_section_html(tmp, doc);
+          thm->discussion = copy_section_html(tmp, doc);
         }
       tmp = tmp->next;
     }
@@ -932,6 +977,55 @@ write_article(FILE* outf, article* art, articleml_format fmt)
     }
 }
 
+/* Handle theorems */
+
+void
+append_to_theorem_list(theorem thm, uint64_t* counter, theorem** list)
+{
+  (*counter) = (*counter) + 1;
+  if (*list == NULL)
+    *list = malloc(sizeof(theorem));
+  else
+    *list = realloc(*list, sizeof(theorem)*(*counter));
+
+  (*list)[*counter-1] = thm;
+}
+  
+
+void
+append_theorem(xmlNodePtr cur, xmlDocPtr doc, article* output)
+{
+  theorem thm;
+  thm.name = xmlGetProp(cur, "name");
+  structure_theorem(&thm, cur, doc);
+
+  if (!xmlStrcmp(cur->name, "theorem"))
+    {
+      append_to_theorem_list(thm, &output->n_theorems, &output->theorems);
+    }
+  else if (!xmlStrcmp(cur->name, "assumption"))
+    {
+      append_to_theorem_list(thm, &output->n_assumptions, &output->assumptions);
+    }
+  else if (!xmlStrcmp(cur->name, "definition"))
+    {
+      append_to_theorem_list(thm, &output->n_definitions, &output->definitions);
+    }
+
+}
+void
+parse_all_theoremlist(theorem* list, uint64_t n_theorems, article* output)
+{
+    for (uint64_t i=0; i < n_theorems; i++)
+    {
+      if (list[i].statement != NULL)
+        list[i].statement = parse_section(list[i].statement, output);
+      if (list[i].discussion != NULL)
+        list[i].discussion = parse_section(list[i].discussion, output);
+    }
+
+}
+
 /* Build document object */
 
 article
@@ -946,6 +1040,10 @@ create_article(const char* input)
   output.n_sections = 0;
   output.theorems = NULL;
   output.n_theorems = 0;
+  output.assumptions = NULL;
+  output.n_assumptions = 0;
+  output.definitions = NULL;
+  output.n_definitions = 0;
   
   output.style = NULL;
   
@@ -1005,22 +1103,11 @@ create_article(const char* input)
 
           output.sections[output.n_sections-1] = sec;
         }
-      else if (!xmlStrcmp(cur->name, (const xmlChar*) "theorem"))
+      else if (!xmlStrcmp(cur->name, (const xmlChar*) "theorem") ||
+               (!xmlStrcmp(cur->name, (const xmlChar*) "assumption")) ||
+                (!xmlStrcmp(cur->name, (const xmlChar*) "definition")))
         {
-          theorem thm;
-          thm.name = xmlGetProp(cur, "name");
-          thm.title = xmlGetProp(cur, "title");
-
-          structure_theorem(&thm, cur, doc);
-
-          output.n_theorems++;
-          
-          if (output.theorems == NULL)
-            output.theorems = malloc(sizeof(theorem));
-          else
-            output.theorems = realloc(output.theorems, sizeof(theorem)*output.n_theorems);
-
-          output.theorems[output.n_theorems-1] = thm;
+          append_theorem(cur, doc, &output);
         }
       else if (!xmlStrcmp(cur->name, (const xmlChar*) "bibliography"))
         {
@@ -1030,13 +1117,10 @@ create_article(const char* input)
       cur = cur->next;
     }
 
-  for (uint64_t i=0; i < output.n_theorems; i++)
-    {
-      if (output.theorems[i].statement != NULL)
-        output.theorems[i].statement = parse_section(output.theorems[i].statement, &output);
-      if (output.theorems[i].proof != NULL)
-        output.theorems[i].proof = parse_section(output.theorems[i].proof, &output);
-    }
+  parse_all_theoremlist(output.theorems, output.n_theorems, &output);
+  parse_all_theoremlist(output.assumptions, output.n_assumptions, &output);
+  parse_all_theoremlist(output.definitions, output.n_definitions, &output);
+  
   
   for (uint64_t i=0; i < output.n_sections; i++)
     {

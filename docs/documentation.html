@@ -21,7 +21,7 @@
     .column {
     flex: 50%;
     }    
-  </style></head><body><div id="main-content"><header><div id="title">ArticleML</div><span id="author">Zach Flynn</span><br/><span id="date">2024-02-18</span><br/></header><section id="Table of Contents" class="normal-section"><h3>Table of Contents</h3>
+  </style></head><body><div id="main-content"><header><div id="title">ArticleML</div><span id="author">Zach Flynn</span><br/><span id="date">2024-02-24</span><br/></header><section id="Table of Contents" class="normal-section"><h3>Table of Contents</h3>
     <ol >
       <li ><a href="#Introduction">Introduction</a></li>
       <li ><a href="#Writing an Article">Writing an Article</a></li>
@@ -313,6 +313,36 @@
     <p >
       And that's really it as far as the grammar and syntax of the math language.  For the full vocabulary of the langauge, see the tables under <a href="#Math Vocabulary">Math Vocabulary</a>.
     </p>
+  </section><section id="Theorems, Assumptions, Definitions" class="normal-section"><h3>Theorems, Assumptions, Definitions</h3>
+
+    <p >You can decare theorems, assumptions, or definitions by doing the following:</p>
+
+    <pre ><code >
+      &lt;article&gt;
+      &lt;theorem name="My Theorem"&gt;
+      &lt;statement&gt;
+      This is my statement of the theorem.
+      &lt;/statement&gt;
+      &lt;discussion&gt;
+      Proof. This is the proof of the theorem.
+      &lt;/discussion&gt;
+      &lt;/theorem&gt;
+    </code></pre>
+
+    <p >Assumptions and Definitions are specified in the same way except they use the &lt;assumption&gt; and &lt;definition&gt; tags.  Both the &lt;statement&gt; and &lt;discussion&gt; section are optional.</p>
+
+    <p >To insert a theorem, assumption, or definition within a &lt;section&gt;, use:</p>
+
+    <pre ><code >
+      &lt;theorem statement="yes"&gt;Theorem Name&lt;/theorem&gt; (inserts the theorem label and statement)
+      &lt;theorem discussion="yes"&gt;Theorem Name&lt;/theorem&gt; (inserts the theorem label and the discussion)
+      &lt;theorem discussion="yes" statement="yes"&gt;Theorem Name&lt;/theorem&gt; (inserts the theorem label and both the statement and the discussion)
+      &lt;theorem refdisc="yes"&gt;Theorem Name&lt;/theorem&gt; (inserts a link to a discussion-only insert of theorem, use for linking to a proof you put in a later section, for example).
+      &lt;theorem&gt;Theorem Name&lt;/theorem&gt; (inserts a link to a statement of the theorem).
+    </code></pre>
+
+    <p >You can use any code that you would use in writing sections within the &lt;statement&gt; and &lt;discussion&gt; tags.</p>
+
   </section><section id="Custom Styling" class="normal-section"><h3>Custom Styling</h3>
     <p >
       To use custom CSS for the article, include a &lt;style&gt; tag below &lt;article&gt;.  For example, the entry for the documentation is:
@@ -328,6 +358,20 @@
     th,td {
     border-bottom: 0.1em solid black;
     }
+    body {
+    background-color: #eee;
+    }
+    #main-content {
+    background-color: white;
+    padding:2em;
+    }
+    .row {
+    display: flex;
+    }
+
+    .column {
+    flex: 50%;
+    }    
     &lt;/style&gt;
     </code></pre>
 

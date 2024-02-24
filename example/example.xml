@@ -41,20 +41,24 @@
       Consumers choose <m>x</m> to maximize <m>u</m>.
     </p>
 
-    <theorem refproof="yes">My Theorem</theorem>
+    <theorem>My Theorem</theorem>
+    
+    <theorem refdisc="yes">My Theorem</theorem>
 
     <theorem statement="yes">My Theorem</theorem>
     
-    <theorem proof="yes">My Theorem</theorem>
-    
+    <theorem discussion="yes">My Theorem</theorem>
+
   </section>
 
+  <!-- Can also use <assumption> and <definition> in the same way for different labels/numbering -->
   <theorem name="My Theorem">
     <statement>
       <p>This is my statement of the theorem.</p>
     </statement>
-    <proof>
-      <p>This is my proof of the theorem.</p>
-    </proof>
+    <discussion>
+      <p><i>Proof.</i> This is my proof of the theorem.</p>
+    </discussion>
   </theorem>
+
 </article>
