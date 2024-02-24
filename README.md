@@ -1,6 +1,6 @@
 # ArticleML
 
-ArticleML is a human-writeable XML document format for writing articles on the internet, especially if they include math.  It currently includes a citation manager ala BibTex, inline citations, references between different sections, and formatting math in both display and inline format.  The program converts ArticleML to HTML for publishing to the web.
+ArticleML is a human-writeable XML document format for writing articles on the internet, especially if they include math.  It currently includes a citation manager ala BibTex, inline citations, references between different sections, formatting math in both display and inline format, and the ability to write, reference, and automatically number theorems, assumptions, and definitions.  The program converts ArticleML to HTML for publishing to the web.
 
 **ArticleML's goal is to make academic articles easier to index, snip, clip, copy, and search on the Internet by encouraging posting papers as HTML instead of PDF.**
 
@@ -96,9 +96,7 @@ The advantage of this approach is that you can build up one large bibliography f
 
 A list of things that are coming soon...
 
-1. Linked Theorem and Proof environments (i.e. allows you to write the proofs after the theorems in the source but put the proofs in a section at the end, etc).
-2. Definition environment to write definition blocks that can be referenced elsewhere in the document.
-3. Customize in-line citations.
+1. Customize in-line citations.
 
 And more...
 
